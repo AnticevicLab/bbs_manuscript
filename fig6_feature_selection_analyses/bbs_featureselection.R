@@ -1,5 +1,5 @@
 rm(list = ls())
-setwd("bbs_manuscript/fig6_feature_selection_analyses")
+setwd("../fig6_feature_selection_analyses")
 
 library(ggplot2)
 library(emojifont)
@@ -84,6 +84,7 @@ names(dpGBC_PredObsv_PC5)=c("V1")
 
 # -- Plot correlations between dpGBCobs and predicted symptom PC scores across step-down parcel selection (718 to 1)
 for (pcno in 1:5){
+  pdf(paste0("FeatureSelection_dpGBCobs_PCScorePred_PC",pcno,".pdf"), width=8,height=6)
 	q <- ggplot(data=eval(parse(text=paste0("dpGBCObsv_PC",pcno,"ScorePred"))),aes(x=2:718, y=V1)) + 
 	geom_point() +
 	scale_x_continuous(limits=c(0,740),breaks=c(1,718),labels=c(718,1)) +
@@ -104,7 +105,8 @@ for (pcno in 1:5){
 
 # -- Plot correlations between dpGBCobs and dpGBCpred across step-down parcel selection (718 to 1)
 for (pcno in 1:5){
-	q <- ggplot(data=eval(parse(text=paste0("s",pcno))),aes(x=2:718, y=V1)) + 
+  pdf(paste0("FeatureSelection_dpGBCobs_dpGBCpred_PC",pcno,".pdf"), width=8,height=6)
+	q <- ggplot(data=eval(parse(text=paste0("dpGBC_PredObsv_PC",pcno))),aes(x=2:718, y=V1)) + 
 	geom_point(col="grey40") +
 	scale_x_continuous(limits=c(0,740),breaks=c(1,718),labels=c(718,1)) +
 	scale_y_continuous(limits=c(0,0.38),breaks=c(0,0.35),labels=c(0,0.35)) +
@@ -122,11 +124,22 @@ for (pcno in 1:5){
 	dev.off()
 }
 
-pc1beta <- read.table("/Users/jielisaji/Dropbox/N-BRIDGE/BSNIP_Analyses/fcMRI/GBC_Parcellated718/GBC_PC1_2k_ColeGlasserGSRParcels718_dat_ztstat.txt", header=FALSE)
-pc2beta <- read.table("/Users/jielisaji/Dropbox/N-BRIDGE/BSNIP_Analyses/fcMRI/GBC_Parcellated718/GBC_PC2_2k_ColeGlasserGSRParcels718_dat_ztstat.txt", header=FALSE)
-pc3beta <- read.table("/Users/jielisaji/Dropbox/N-BRIDGE/BSNIP_Analyses/fcMRI/GBC_Parcellated718/GBC_PC3_2k_ColeGlasserGSRParcels718_dat_ztstat.txt", header=FALSE)
-pc4beta <- read.table("/Users/jielisaji/Dropbox/N-BRIDGE/BSNIP_Analyses/fcMRI/GBC_Parcellated718/GBC_PC4_2k_ColeGlasserGSRParcels718_dat_ztstat.txt", header=FALSE)
-pc5beta <- read.table("/Users/jielisaji/Dropbox/N-BRIDGE/BSNIP_Analyses/fcMRI/GBC_Parcellated718/GBC_PC5_2k_ColeGlasserGSRParcels718_dat_ztstat.txt", header=FALSE)
+pc1beta <- read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_PC1_ztstat.pscalar.txt", header=FALSE)
+pc2beta <- read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_PC2_ztstat.pscalar.txt", header=FALSE)
+pc3beta <- read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_PC3_ztstat.pscalar.txt", header=FALSE)
+pc4beta <- read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_PC4_ztstat.pscalar.txt", header=FALSE)
+pc5beta <- read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_PC5_ztstat.pscalar.txt", header=FALSE)
+
+pc1ob_dotdGBCpc1b_r <- as.data.frame(read.table("BSNIP_PC1_dpGBCObs_PC1ScorePred_r.txt", header=FALSE)[1:717,])
+pc2ob_dotdGBCpc2b_r <- as.data.frame(read.table("BSNIP_PC2_dpGBCObs_PC2ScorePred_r.txt", header=FALSE)[1:717,])
+pc3ob_dotdGBCpc3b_r <- as.data.frame(read.table("BSNIP_PC3_dpGBCObs_PC3ScorePred_r.txt", header=FALSE)[1:717,])
+pc4ob_dotdGBCpc4b_r <- as.data.frame(read.table("BSNIP_PC4_dpGBCObs_PC4ScorePred_r.txt", header=FALSE)[1:717,])
+pc5ob_dotdGBCpc5b_r <- as.data.frame(read.table("BSNIP_PC5_dpGBCObs_PC5ScorePred_r.txt", header=FALSE)[1:717,])
+names(pc1ob_dotdGBCpc1b_r)=c("V1")
+names(pc2ob_dotdGBCpc2b_r)=c("V1")
+names(pc3ob_dotdGBCpc3b_r)=c("V1")
+names(pc4ob_dotdGBCpc4b_r)=c("V1")
+names(pc5ob_dotdGBCpc5b_r)=c("V1")
 
 # -- Get P_select for which metrics are maximal
 for (pcno in 1:4){
@@ -213,6 +226,7 @@ bsnipsimdf <- data.frame("Dx"=c("SCZP", "SADP", "BPP", "PSD"),
   cor(bsnipobsv$Value,bsnippred$Value)))
 
 # -- Plot summary broken down by Dx group
+pdf("dpGBCpred_dpGBCobs_GroupSummary.pdf", height=6,width=8)
 ggplot(data=bsnipsimdf, aes(x=Dx,y=r, fill=Dx)) +
   geom_col() +
   geom_text(aes(label=c("n=167","n=119","n=150","n=436")), size=5, vjust=-1) +
@@ -234,6 +248,7 @@ dev.off()
 # -- Plot the single subject example
 preddgbc_t39 <- as.data.frame(t(read.table("BSNIP_N436_PredGBC_Top39Parcels.txt")))
 obsvdgbc_t39 <- as.data.frame(t(read.table("BSNIP_N436_ObsvGBC_Top39Parcels.txt")))
+pdf("Pred_Obs_DeltaGBC_SingleSubjectExample_Scatterplot.pdf", height=8,width=8)
 bsnipsub1 <- data.frame("Predicted"=preddgbc_t39$V380, "Observed"=obsvdgbc_t39$V380)
 ggplot(data=bsnipsub1, aes(x=Predicted,y=Observed, col=Predicted)) +
   geom_vline(xintercept=0) +

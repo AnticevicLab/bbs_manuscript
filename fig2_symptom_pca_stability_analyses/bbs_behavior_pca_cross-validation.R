@@ -1,5 +1,5 @@
 rm(list = ls())
-#setwd("/Users/jielisaji/Dropbox/bbs_manuscript/fig2_symptom_pca_stability_analyses")
+setwd("../fig2_symptom_pca_stability_analyses")
 library(ggplot2)
 library(nFactors)
 library(ggbiplot)
@@ -129,6 +129,7 @@ for (site in c("CT", "GP", "GT", "JS", "MB", "MK")){
 
 # -- Plot the screeplots
 for (site in c("CT", "GP", "GT", "JS", "MB", "MK")){
+  pdf(paste0("Symptom_PCA_LOSO_",site,"_Screeplot.pdf"), height=6, width=10)
   q <- ggplot(data=get(paste0("LOO_", site))$prop_var, aes(x=PC, y=Variance)) +
     geom_line(data=get(paste0("LOO_", site))$crit, aes(x=PC,y=crit), lty=2, col="dark red",lwd=1.2) +
     geom_line(lwd=1.2)+
@@ -151,6 +152,7 @@ for (site in c("CT", "GP", "GT", "JS", "MB", "MK")){
 
 # -- Pie charts of proportion variance explained by significant vs. non-sig. PCs
 for (site in c("CT", "GP", "GT", "JS", "MB", "MK")){
+  pdf(paste0("Symptom_PCA_LOSO_",site,"_Piechart.pdf"), height=6, width=10)
   q <- ggplot(data=get(paste0("pve_prop", site)),aes(x=factor(1),y=Total.Variance,fill=factor(PCs))) +
     geom_bar(width = 1, stat = "identity") +
     coord_polar(theta="y") +
@@ -187,7 +189,8 @@ for (site in c("CT", "GP", "GT", "JS", "MB", "MK")){
 
 # -- Scatterplots showing correlation between computed and observed PC1 scores, for each site
 cols <- subset(beh_Site, Site == "CT", select=Group)
-ggplot(predCT2, aes(x=PC1, y=obsCT$PC1, col=cols$Group)) +
+pdf(paste0("Symptom_PCA_LOSO_Predicted_Site1.pdf"), height=6, width=10)
+ggplot(predCT, aes(x=PC1, y=obsCT$PC1, col=cols$Group)) +
   stat_smooth(method = "lm", col = "dark blue", lwd=2) +
   geom_point(size=5, alpha=0.7) +
   scale_colour_manual(values = c("BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -205,6 +208,7 @@ ggplot(predCT2, aes(x=PC1, y=obsCT$PC1, col=cols$Group)) +
 dev.off()
 
 cols <- subset(beh_Site, Site == "GP", select=Group)
+pdf(paste0("Symptom_PCA_LOSO_Predicted_Site2.pdf"), height=6, width=10)
 ggplot(predGP, aes(x=PC1, y=obsGP$PC1, col=cols$Group)) +
   stat_smooth(method = "lm", col = "dark blue", lwd=2) +
   geom_point(size=5, alpha=0.7)+
@@ -223,7 +227,8 @@ ggplot(predGP, aes(x=PC1, y=obsGP$PC1, col=cols$Group)) +
 dev.off()
 
 cols <- subset(beh_Site, Site == "GT", select=Group)
-ggplot(predGT, aes(x=PC1, y=obsGT$PC1, col=cols$Group))) +
+pdf(paste0("Symptom_PCA_LOSO_Predicted_Site3.pdf"), height=6, width=10)
+ggplot(predGT, aes(x=PC1, y=obsGT$PC1, col=cols$Group)) +
   stat_smooth(method = "lm", col = "dark blue", lwd=2) +
   geom_point(size=5, alpha=0.7)+
   scale_colour_manual(values = c("BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -241,7 +246,8 @@ ggplot(predGT, aes(x=PC1, y=obsGT$PC1, col=cols$Group))) +
 dev.off()
 
 cols <- subset(beh_Site, Site == "JS", select=Group)
-ggplot(predJS, aes(x=PC1, y=obsJS$PC1, col=cols$Group))) +
+pdf(paste0("Symptom_PCA_LOSO_Predicted_Site4.pdf"), height=6, width=10)
+ggplot(predJS, aes(x=PC1, y=obsJS$PC1, col=cols$Group)) +
   stat_smooth(method = "lm", col = "dark blue", lwd=2) +
   geom_point(size=5, alpha=0.7)+
   scale_colour_manual(values = c("BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -259,7 +265,8 @@ ggplot(predJS, aes(x=PC1, y=obsJS$PC1, col=cols$Group))) +
 dev.off()
 
 cols <- subset(beh_Site, Site == "MK", select=Group)
-ggplot(predMK, aes(x=PC1, y=obsMK$PC1, col=cols$Group))) +
+pdf(paste0("Symptom_PCA_LOSO_Predicted_Site5.pdf"), height=6, width=10)
+ggplot(predMK, aes(x=PC1, y=obsMK$PC1, col=cols$Group)) +
   stat_smooth(method = "lm", col = "dark blue", lwd=2) +
   geom_point(size=5, alpha=0.7)+
   scale_colour_manual(values = c("BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -277,7 +284,8 @@ ggplot(predMK, aes(x=PC1, y=obsMK$PC1, col=cols$Group))) +
 dev.off()
 
 cols <- subset(beh_Site, Site == "MB", select=Group)
-ggplot(predMB, aes(x=PC1, y=obsMB$PC1, col=cols)) +
+pdf(paste0("Symptom_PCA_LOSO_Predicted_Site6.pdf"), height=6, width=10)
+ggplot(predMB, aes(x=PC1, y=obsMB$PC1, col=cols$Group)) +
   stat_smooth(method = "lm", col = "dark blue", lwd=2) +
   geom_point(size=5, alpha=0.7)+
   scale_colour_manual(values = c("BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -309,6 +317,7 @@ propvarsumm$PropVar <- unfactor(propvarsumm$PropVar)
 propvarsumm$PCSig <- unfactor(propvarsumm$PCSig)
 
 # -- Plot summary of no. sig. PCs and total var explained
+pdf(paste0("Symptom_PCA_LOSO_PropVarExplained.pdf"), height=6, width=6)
 ggplot(propvarsumm, aes(x=Site, y=PropVar)) +
   geom_col(fill="white", col="black", lwd=1) +
   theme1 +
@@ -353,6 +362,7 @@ for (fold in 1:k){
 
 # -- Plot the screeplots
 for (fold in 1:5){
+  pdf(paste0("Symptom_PCA_kfold_CV_Fold",fold,"_Screeplot.pdf"), height=6, width=10)
   q <- ggplot(data=get(paste0("CV_t", fold))$prop_var, aes(x=PC, y=Variance)) +
     geom_line(data=get(paste0("CV_t", fold))$crit, aes(x=PC,y=crit), lty=2, col="dark red",lwd=1.2) +
     geom_line(lwd=1.2)+
@@ -375,6 +385,7 @@ for (fold in 1:5){
 
 # -- Plot the pie charts
 for (fold in 1:5){
+  pdf(paste0("Symptom_PCA_kfold_CV_Fold",fold,"_Piechart.pdf"), height=6, width=10)
   q <- ggplot(data=get(paste0("pve_prop", fold)),aes(x=factor(1),y=Total.Variance,fill=factor(PCs))) +
     geom_bar(width = 1, stat = "identity") +
     coord_polar(theta="y") +
@@ -392,6 +403,7 @@ for (fold in 1:5){
           panel.background = element_rect(fill = "transparent", colour = NA)) +
     guides(fill=guide_legend(keywidth=0.7,keyheight=0.7, default.unit="inch",title="PCs"))
   print(q)
+  dev.off()
 }
 
 # -- Compute PC scores for the left out subjects
@@ -409,6 +421,7 @@ for (fold in 1:k){
 }
 
 # -- Plot the scatterplots of pred vs obs
+pdf(paste0("Symptom_PCA_PredvsObs_Fold1.pdf"), height=6, width=10)
 cols <- beh_Site[c(flds$Fold1),]$Group
 ggplot(pred_test1, aes(x=PC1, y=obs_test1$PC1, col=cols)) +
   stat_smooth(method = "lm", col = "dark blue", lwd=2) +
@@ -429,6 +442,7 @@ ggplot(pred_test1, aes(x=PC1, y=obs_test1$PC1, col=cols)) +
         axis.text.y.right = element_text(size = 25, color="green3", angle=270, hjust=0.5, margin=margin(0,5,0,5)))
 dev.off()
 
+pdf(paste0("Symptom_PCA_PredvsObs_Fold2.pdf"), height=6, width=10)
 cols <- beh_Site[c(flds$Fold2),]$Group
 ggplot(pred_test2, aes(x=PC1, y=obs_test2$PC1, col=cols)) +
   stat_smooth(method = "lm", col = "dark blue", lwd=2) +
@@ -447,6 +461,7 @@ ggplot(pred_test2, aes(x=PC1, y=obs_test2$PC1, col=cols)) +
         axis.title.y = element_text(size = 25,margin=margin(0,-15,0,0)))
 dev.off()
 
+pdf(paste0("Symptom_PCA_PredvsObs_Fold3.pdf"), height=6, width=10)
 cols <- beh_Site[c(flds$Fold3),]$Group
 ggplot(pred_test3, aes(x=PC1, y=obs_test3$PC1, col=cols)) +
   stat_smooth(method = "lm", col = "dark blue", lwd=2) +
@@ -465,6 +480,7 @@ ggplot(pred_test3, aes(x=PC1, y=obs_test3$PC1, col=cols)) +
         axis.title.y = element_text(size = 25,margin=margin(0,-15,0,0)))
 dev.off()
 
+pdf(paste0("Symptom_PCA_PredvsObs_Fold4.pdf"), height=6, width=10)
 cols <- beh_Site[c(flds$Fold4),]$Group
 ggplot(pred_test4, aes(x=PC1, y=obs_test4$PC1, col=cols)) +
   stat_smooth(method = "lm", col = "dark blue", lwd=2) +
@@ -483,6 +499,7 @@ ggplot(pred_test4, aes(x=PC1, y=obs_test4$PC1, col=cols)) +
         axis.title.y = element_text(size = 25,margin=margin(0,-15,0,0)))
 dev.off()
 
+pdf(paste0("Symptom_PCA_PredvsObs_Fold5.pdf"), height=6, width=10)
 cols <- beh_Site[c(flds$Fold5),]$Group
 ggplot(pred_test5, aes(x=PC1, y=obs_test5$PC1, col=cols)) +
   stat_smooth(method = "lm", col = "dark blue", lwd=2) +
@@ -510,10 +527,11 @@ for (fold in 1:5){
 }
 
 # -- Summarize 
-propvarsummkfold <- data.frame(cbind(1:5,5,rbind(k5pve_prop1$Total.Variance[1],k5pve_prop2$Total.Variance[1],k5pve_prop3$Total.Variance[1],k5pve_prop4$Total.Variance[1],k5pve_prop5$Total.Variance[1])))
+propvarsummkfold <- data.frame(cbind(1:5,5,rbind(pve_prop1$Total.Variance[1],pve_prop2$Total.Variance[1],pve_prop3$Total.Variance[1],pve_prop4$Total.Variance[1],pve_prop5$Total.Variance[1])))
 names(propvarsummkfold) <- c("Fold","PCSig","PropVar")
 
 # -- Plot summary of no. sig. PCs and total var explained
+pdf(paste0("Symptom_PCA_Summary_KFoldCV.pdf"), height=6, width=10)
 ggplot(propvarsummkfold, aes(x=Fold, y=PropVar)) +
   geom_col(fill="white", col="black",lwd=1) +
   theme1 +
@@ -608,6 +626,7 @@ DF <- data.frame("k"=kcat, "Fold"=fcat,"PC"=1:5, "R"=abs(dat))
 # -- Compute summary statistics across k values and PCs
 DFsumm <- summarySE(DF, measurevar="R", groupvars=c("k","PC"))
 
+pdf(paste0("Symptom_PCA_Summmary_kfoldCV.pdf"), height=6, width=10)
 ggplot(DFsumm, aes(x=k, y=R, alpha=as.factor(PC))) +
   geom_hline(yintercept=1, col="red", lwd=2) +
   stat_summary(position="dodge", geom = "bar", fun="mean",fill=c("#485C77")) +

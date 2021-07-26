@@ -1,5 +1,5 @@
 rm(list = ls())
-#setwd("/Users/jielisaji/Dropbox/bbs_manuscript/fig1_symptom_pca_analyses")
+setwd("../fig1_symptom_pca_analyses")
 library(ggplot2)
 library(scales)
 library(matrixStats)
@@ -282,6 +282,7 @@ crit=data.frame(PC=c(1:36),crit=c(crit95))
 
 # -- Plots
 # -- Screeplot of variance explained by each PC
+pdf("Symptom_PCA_Screeplot.pdf", width=10, height=6)
 ggplot(data=prop_var, aes(x=PC, y=Variance)) +
   geom_line(data=crit, aes(x=PC,y=crit), lty=2, col="dark red",lwd=1.2) +
   geom_line(lwd=1.2)+
@@ -303,6 +304,7 @@ dev.off()
 # -- Pie chart of variance attributed to significant vs non-significant PCs
 pve_prop <- data.frame(PCs=c("1-5","6-36"),"Total Variance"=c(sum(pve[1:5]),sum(pve[6:36])))
 
+pdf("Symptom_PCA_ProportionVarianceExplained_Piechart.pdf", width=10, height=6)
 ggplot(data=pve_prop,aes(x=factor(1),y=Total.Variance,fill=factor(PCs))) +
   geom_bar(width = 1, stat = "identity") +
   coord_polar(theta="y") +
@@ -324,6 +326,7 @@ ggplot(data=pve_prop,aes(x=factor(1),y=Total.Variance,fill=factor(PCs))) +
         legend.position="left",
         panel.background = element_rect(fill = "transparent", colour = NA)) +
   guides(fill=guide_legend(keywidth=0.7,keyheight=0.7, default.unit="inch",title="PCs"))
+dev.off()
 
 scores_PSD = as.data.frame(cbind(beh_raw[1],pcaA$x))
 
@@ -336,32 +339,15 @@ beh_CONm <-matrix(unlist(beh_CON[1:202,2:37]), ncol=36, byrow = FALSE)
 
 PROBbehZMean <- colMeans(beh_raw[-1])
 PROBbehZSD <- colSds(as.matrix(beh_raw[-1]))
-# as.matrix(scale(beh_raw[-1])[,]) %*% loadingsm # is the same as PROBscores or pcaA$x
 CONbehZ_ZbyPROB <- sweep(sweep(beh_CONm, 2, PROBbehZMean, "-"), 2, PROBbehZSD,"/") # Z-score CON relative to PROB
-#CONscores <- behZCONm %*% loadingsm
-#CONscoresZ <- scale(CONscores)[,]
 CON_ZbyPROB_scores <- as.matrix(CONbehZ_ZbyPROB) %*% loadingsm
-#CONZscoresZ <- scale(CONZscores)[,]
-#plot(CONscoresZ[,1], CONZscores[,1])
 CON_ZbyPROB_scores_mean=colMeans(CON_ZbyPROB_scores)
 CON_ZbyPROB_scores_sd=colSds(CON_ZbyPROB_scores)
 CON_ZbyPROB_scores_Z <- scale(CON_ZbyPROB_scores)[,]
 
-
-
-
-
 beh_PSD_mean <- colMeans(beh_PSD)
 beh_PSD_sd <- colSds(as.matrix(beh_PSD))
 beh_CON_ZbyPSD <- sweep(sweep(beh_CONm, 2, beh_PSD_mean, "-"), 2, beh_PSD_sd,"/") # Z-score CON relative to PSD
-
-
-    # means, sds and scale
-    scoresCON_ZbyPTT <- as.matrix(behaviorCON_ZbyPTT) %*% loadingsmtx
-    scoresCON_ZbyPTT_m <- colMeans(scoresCON_ZbyPTT)
-    scoresCON_ZbyPTT_sd <- colSds(scoresCON_ZbyPTT)
-    scoresCON_ZbyPTT_Z <- scale(scoresCON_ZbyPTT)[, ]
-
 
 CON_ZbyPSD_scores <- as.matrix(beh_CON_ZbyPSD) %*% loadingsm # project CON into PSD PCA space
 CON_ZbyPSD_scores_mean=colMeans(CON_ZbyPSD_scores) # mean of CON PC scores
@@ -453,6 +439,7 @@ grid3d("z++")
 view3d(userMatrix=rotationMatrix(2*pi * 1, 1, -1, -1))
 
 # -- Plot ridge plots
+pdf("Symptom_PCA_RidgelinePlots_PC1.pdf", width=10, height=6)
 ggplot(scoresAll, aes(x=PC1, y=Group,group=Group)) + 
   geom_density_ridges(aes(fill=Group), lwd=2, rel_min_height = 0.01) +
   scale_fill_manual(values = c("CON"="white","PSD"="black","BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -468,6 +455,7 @@ ggplot(scoresAll, aes(x=PC1, y=Group,group=Group)) +
   geom_vline(xintercept=scoresAll_means$PC1[5], lty=2,col="grey",lwd=3)
 dev.off()
 
+pdf("Symptom_PCA_RidgelinePlots_PC2.pdf", width=10, height=6)
 ggplot(scoresAll, aes(x=PC2, y=Group,group=Group)) + 
   geom_density_ridges(aes(fill=Group), lwd=2, rel_min_height = 0.01) +
   scale_fill_manual(values = c("CON"="white","PSD"="black","BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -481,7 +469,9 @@ ggplot(scoresAll, aes(x=PC2, y=Group,group=Group)) +
   geom_segment(aes(x =  scoresAll_means$PC2[3], y=3.25,xend = scoresAll_means$PC2[3], yend = 4.0),size=2, linetype = 1,color = "white") +
   geom_segment(aes(x =  scoresAll_means$PC2[4], y=4.30,xend = scoresAll_means$PC2[4], yend = 5.0),size=2, linetype = 1,color = "white") +
   geom_vline(xintercept=scoresAll_means$PC2[5], lty=2,col="grey",lwd=3)
+dev.off()
 
+pdf("Symptom_PCA_RidgelinePlots_PC3.pdf", width=10, height=6)
 ggplot(scoresAll, aes(x=PC3, y=Group,group=Group)) + 
   geom_density_ridges(aes(fill=Group), lwd=2, rel_min_height = 0.005) +
   scale_fill_manual(values = c("CON"="white","PSD"="black","BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -495,7 +485,9 @@ ggplot(scoresAll, aes(x=PC3, y=Group,group=Group)) +
   geom_segment(aes(x =  scoresAll_means$PC3[3], y=3.0,xend = scoresAll_means$PC3[3], yend = 4),size=2, linetype = 1,color = "white") +
   geom_segment(aes(x =  scoresAll_means$PC3[4], y=4.0,xend = scoresAll_means$PC3[4], yend = 5),size=2, linetype = 1,color = "white") +
   geom_vline(xintercept=scoresAll_means$PC3[5], lty=2,col="grey",lwd=3)
+dev.off()
 
+pdf("Symptom_PCA_RidgelinePlots_PC4.pdf", width=10, height=6)
 ggplot(scoresAll, aes(x=PC4, y=Group,group=Group)) + 
   geom_density_ridges(aes(fill=Group), lwd=2, rel_min_height = 0.01) +
   scale_fill_manual(values = c("CON"="white","PSD"="black","BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -509,7 +501,9 @@ ggplot(scoresAll, aes(x=PC4, y=Group,group=Group)) +
   geom_segment(aes(x =  scoresAll_means$PC4[3], y=3.0,xend = scoresAll_means$PC4[3], yend = 4),size=2, linetype = 1,color = "white") +
   geom_segment(aes(x =  scoresAll_means$PC4[4], y=4.0,xend = scoresAll_means$PC4[4], yend = 5),size=2, linetype = 1,color = "white") +
   geom_vline(xintercept=scoresAll_means$PC4[5], lty=2,col="grey",lwd=3)
+dev.off()
 
+pdf("Symptom_PCA_RidgelinePlots_PC5.pdf", width=10, height=6)
 ggplot(scoresAll, aes(x=PC5, y=Group,group=Group)) + 
   geom_density_ridges(aes(fill=Group), lwd=2, rel_min_height = 0.015) +
   scale_fill_manual(values = c("CON"="white","PSD"="black","BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -523,6 +517,7 @@ ggplot(scoresAll, aes(x=PC5, y=Group,group=Group)) +
   geom_segment(aes(x =  scoresAll_means$PC5[3], y=3.0,xend = scoresAll_means$PC5[3], yend = 4.0),size=2, linetype = 1,color = "white") +
   geom_segment(aes(x =  scoresAll_means$PC5[4], y=4.2,xend = scoresAll_means$PC5[4], yend = 5.0),size=2, linetype = 1,color = "white") +
   geom_vline(xintercept=scoresAll_means$PC5[5], lty=2,col="grey",lwd=3)
+dev.off()
 
 # -- Plot radarplots of PC loadings
 assign("PCloadingsRadarplot",data.frame(rbind(rep(0.5,36), rep(-0.5,36),t(pcaA$rotation[,5:1]))))
@@ -531,6 +526,7 @@ Sxcols=c("#004E2E","#005F38","#006E45","#008953","#009E5D","#00B669",
           "#354252","#334862","#37506E","#406084","#41658F","#446C9C","#4572A6",
           "#5B013B","#6A0144","#7F0154","#950264","#AD016D","#C2017A","#CC0285","#D3038C","#DF0293","#ED039F",
           "#F702A6","#FF3DB9","#FF5ABE","#FF7FD4","#FFA1E4","#FEB5EB")
+pdf("Symptom_PCA_Loadings_Radarplot.pdf", width=6, height=6)
 radarchartvar(PCloadingsRadarplot, latlty=1, latcol="darkred", axistype=0, seglty = 1, seglwd = 2, segmincol=c("grey"), segmaxcol=c("grey"), segcol=c("white"), cglty=1, cglwd=2, vlabels="", cglcol=c(Sxcols), pcol=c("grey30","grey40","grey50","grey60","grey70"), plwd=7, seg=6, plty=c(1,1,1,1,1))
 dev.off()
 

@@ -1,5 +1,5 @@
 rm(list = ls())
-setwd("bbs_manuscript/fig5_cca_analyses")
+setwd("../fig5_cca_analyses")
 
 library(ggplot2)
 library(GGally)
@@ -312,25 +312,24 @@ p.adjust(ccNP180B36.permVartest$rho$pval, method="fdr")
 signs<-rep(1,36)
 
 # -- Organize for plotting
-ccNP180B36behvar <- as.data.frame(cbind("PC"=1:36, t(t(ccNP180B36$scores$corr.X.xscores)*signs)))
-ccNP180B36behloadings <- as.data.frame(cbind("PC"=1:36, t(t(ccNP180B36$xcoef)*signs)))
-ccNP180B36behloadingsorig <- as.data.frame(cbind("PC"=1:36, ccNP180B36$xcoef))
-names(ccNP180B36behloadings) <- c("PC", "CV1", "CV2", "CV3", "CV4", "CV5")
+ccNP180B36behfacload <- as.data.frame(cbind("PC"=1:36, t(t(ccNP180B36$scores$corr.X.xscores)*signs)))
+ccNP180B36behcoef <- as.data.frame(cbind("PC"=1:36, t(t(ccNP180B36$xcoef)*signs)))
+ccNP180B36behcoeforig <- as.data.frame(cbind("PC"=1:36, ccNP180B36$xcoef))
+names(ccNP180B36behcoef) <- c("PC", "CV1", "CV2", "CV3", "CV4", "CV5")
 bwr <- colorRampPalette(c("blue","white","red"))(101)
 
-ccNP180B36neurvar <- as.data.frame(cbind("Parcel"=1:180, t(t(ccNP180B36$scores$corr.Y.yscores)*signs)))
-ccNP180B36neurloadings <- as.data.frame(cbind("Parcel"=1:180, t(t(ccNP180B36$ycoef)*signs)))
-names(ccNP180B36neurvar) <- c("Parcel", "CV1", "CV2", "CV3", "CV4", "CV5")
-names(ccNP180B36neurloadings) <- c("Parcel", "CV1", "CV2", "CV3", "CV4", "CV5")
+ccNP180B36neurfacload <- as.data.frame(cbind("Parcel"=1:180, t(t(ccNP180B36$scores$corr.Y.yscores)*signs)))
+ccNP180B36neurcoef <- as.data.frame(cbind("Parcel"=1:180, t(t(ccNP180B36$ycoef)*signs)))
+names(ccNP180B36neurfacload) <- c("Parcel", "CV1", "CV2", "CV3", "CV4", "CV5")
+names(ccNP180B36neurcoef) <- c("Parcel", "CV1", "CV2", "CV3", "CV4", "CV5")
 
 ccNP180B36xscoresorig <- as.data.frame(ccNP180B36$scores$xscores)
 ccNP180B36yscoresorig <- as.data.frame(ccNP180B36$scores$yscores)
 ccNP180B36xscores <- as.data.frame(t(t(ccNP180B36$scores$xscores)*signs))
 ccNP180B36yscores <- as.data.frame(t(t(ccNP180B36$scores$yscores)*signs))
 
-
 # -- Plot the screeplot showing the canonical correlations for 180 vs. 36 CCA
-pdf("/Users/jielisaji/Dropbox/N-BRIDGE/BSNIP_Analyses/Figures/BSNIP_CCA_Images/BSNIP_CCA_ParcellatedN180B36_RhoScreeplot.pdf", width=8,height=6)
+pdf("CCA_ParcellatedN180B36_RhoScreeplot.pdf", width=10,height=6)
 plotdatPN180B36 <- cbind("Mode"=1:dim(ccNP180B36.permVartest$rho)[1],ccNP180B36.permVartest$rho)
 xcoordi <- c(rbind((1:dim(ccNP180B36.permVartest$rho)[1])-0.5,(1:dim(ccNP180B36.permVartest$rho)[1])-0.5), (dim(ccNP180B36.permVartest$rho)[1])+0.5)
 xcoord <- head(c(xcoordi, rev(xcoordi))[-1], -1)
@@ -350,6 +349,7 @@ ggplot(plotdatPN180B36, aes(x=Mode, y=stat0rho)) +
 dev.off()
 
 # -- Plot the screeplot showing behavioral variance explained for 180 vs. 36 CCA
+pdf("CCA_ParcellatedN180B36_BehaviorVarianceScreeplot.pdf", width=10,height=6)
 plotdatPN180B36 <- cbind("Mode"=1:dim(ccNP180B36.permVartest$X)[1], ccNP180B36.permVartest$X)
 xcoordi <- c(rbind((1:dim(ccNP180B36.permVartest$X)[1])-0.5,(1:dim(ccNP180B36.permVartest$X)[1])-0.5), (dim(ccNP180B36.permVartest$X)[1])+0.5)
 xcoord <- head(c(xcoordi, rev(xcoordi))[-1], -1)
@@ -369,7 +369,7 @@ dev.off()
 
 # -- Plot the screeplot showing neural variance explained for 180 vs. 36 CCA
 plotdatPN180B36 <- cbind("Mode"=1:dim(ccNP180B36.permVartest$X)[1], ccNP180B36.permVartest$X)
-pdf("/Users/jielisaji/Dropbox/N-BRIDGE/BSNIP_Analyses/Figures/BSNIP_CCA_Images/BSNIP_CCA_ParcellatedN180B36_VarScreeplotGBC.pdf", width=8,height=6)
+pdf("CCA_ParcellatedN180B36_NeuralVarianceScreeplot.pdf", width=10,height=6)
 plotdatPN180B36 <- cbind("Mode"=1:dim(ccNP180B36.permVartest$Y)[1], ccNP180B36.permVartest$Y)
 xcoordi <- c(rbind((1:dim(ccNP180B36.permVartest$Y)[1])-0.5,(1:dim(ccNP180B36.permVartest$Y)[1])-0.5), (dim(ccNP180B36.permVartest$Y)[1])+0.5)
 xcoord <- head(c(xcoordi, rev(xcoordi))[-1], -1)
@@ -388,6 +388,7 @@ ggplot(plotdatPN180B36, aes(x=Mode, y=stat0Y)) +
 dev.off()
 
 # -- Pie chart of total behavioral var explained in 180 vs. 36 CCA
+pdf("CCA_ParcellatedN180B36_BehaviorPiechart.pdf", width=6,height=6)
 pve_prop9 <- data.frame("Type"=c("Explained","Not Explained"),"Total Variance"=c(sum(colMeans(ccNP180B36$scores$corr.X.yscores^2)), 1-sum(colMeans(ccNP180B36$scores$corr.X.yscores^2))))
 ggplot(data=pve_prop9,aes(x=factor(1),y=Total.Variance,fill=factor(Type))) +
   geom_bar(width = 1, stat = "identity") +
@@ -406,6 +407,7 @@ ggplot(data=pve_prop9,aes(x=factor(1),y=Total.Variance,fill=factor(Type))) +
 dev.off()
 
 # -- Pie chart of total neural var explained in 180 vs. 36 CCA
+pdf("CCA_ParcellatedN180B36_NeuralPiechart.pdf", width=6,height=6)
 pve_prop9n <- data.frame("Type"=c("Explained","Not Explained"),"Total Variance"=c(sum(colMeans(ccNP180B36$scores$corr.Y.xscores^2)), 1-sum(colMeans(ccNP180B36$scores$corr.Y.xscores^2))))
 ggplot(data=pve_prop9n,aes(x=factor(1),y=Total.Variance,fill=factor(Type))) +
   geom_bar(width = 1, stat = "identity") +
@@ -433,16 +435,17 @@ p.adjust(ccNP180B5.permVartest$rho$pval, method="fdr")
 signs<-c(1,-1,-1,1,1)
 
 # -- Organize for plotting
-ccNP180B5behvar <- as.data.frame(cbind("PC"=1:5, t(t(ccNP180B5$scores$corr.X.xscores)*signs)))
-ccNP180B5behloadings <- as.data.frame(cbind("PC"=1:5, t(t(ccNP180B5$xcoef)*signs)))
-ccNP180B5behloadingsorig <- as.data.frame(cbind("PC"=1:5, ccNP180B5$xcoef))
-names(ccNP180B5behloadings) <- c("PC", "CV1", "CV2", "CV3", "CV4", "CV5")
+ccNP180B5behfacload <- as.data.frame(cbind("PC"=1:5, t(t(ccNP180B5$scores$corr.X.xscores)*signs)))
+ccNP180B5behcoef <- as.data.frame(cbind("PC"=1:5, t(t(ccNP180B5$xcoef)*signs)))
+ccNP180B5behcoeforig <- as.data.frame(cbind("PC"=1:5, ccNP180B5$xcoef))
+names(ccNP180B5behcoef) <- c("PC", "CV1", "CV2", "CV3", "CV4", "CV5")
+names(ccNP180B5behfacload) <- c("PC", "CV1", "CV2", "CV3", "CV4", "CV5")
 bwr <- colorRampPalette(c("blue","white","red"))(101)
 
-ccNP180B5neurvar <- as.data.frame(cbind("Parcel"=1:180, t(t(ccNP180B5$scores$corr.Y.yscores)*signs)))
-ccNP180B5neurloadings <- as.data.frame(cbind("Parcel"=1:180, t(t(ccNP180B5$ycoef)*signs)))
-names(ccNP180B5neurvar) <- c("Parcel", "CV1", "CV2", "CV3", "CV4", "CV5")
-names(ccNP180B5neurloadings) <- c("Parcel", "CV1", "CV2", "CV3", "CV4", "CV5")
+ccNP180B5neurfacload <- as.data.frame(cbind("Parcel"=1:180, t(t(ccNP180B5$scores$corr.Y.yscores)*signs)))
+ccNP180B5neurcoef <- as.data.frame(cbind("Parcel"=1:180, t(t(ccNP180B5$ycoef)*signs)))
+names(ccNP180B5neurfacload) <- c("Parcel", "CV1", "CV2", "CV3", "CV4", "CV5")
+names(ccNP180B5neurcoef) <- c("Parcel", "CV1", "CV2", "CV3", "CV4", "CV5")
 
 ccNP180B5xscoresorig <- as.data.frame(ccNP180B5$scores$xscores)
 ccNP180B5yscoresorig <- as.data.frame(ccNP180B5$scores$yscores)
@@ -451,10 +454,11 @@ ccNP180B5yscores <- as.data.frame(t(t(ccNP180B5$scores$yscores)*signs))
 
 # -- Plot loading of symptom PCs on each CV
 for (cvno in 1:5){
-  q<-ggplot(data=ccNP180B5behloadings, aes(x=PC, y=get(paste0("CV",cvno)),fill=get(paste0("CV",cvno)),order=PC)) +
+  pdf(paste0("CCA_ParcellatedN180B5_CV",cvno,"_BehaviorFactorLoadings.pdf"), width=10,height=6)
+  q<-ggplot(data=ccNP180B5behfacload, aes(x=PC, y=get(paste0("CV",cvno)),fill=get(paste0("CV",cvno)),order=PC)) +
     geom_col(col="black", lwd=2) +
     scale_fill_gradient2(low="blue",mid="white",high="red") +
-    scale_y_continuous(expand = c(0, 0),limits=c(-0.7,0.7), breaks=seq(-0.5, 0.5, by=0.5),labels=format(seq(-0.5, 0.5, by=0.5), nsmall = 1)) +
+    scale_y_continuous(expand = c(0, 0),limits=c(-1.1,1.1), breaks=seq(-0.5, 0.5, by=0.5),labels=format(seq(-0.5, 0.5, by=0.5), nsmall = 1)) +
     ylab("Loadings") +
     theme1 + theme(axis.text.x = element_text(size = 40, color="black"), 
                    axis.title.x = element_text(size = 40,margin=margin(15,0,0,0)),
@@ -465,7 +469,7 @@ for (cvno in 1:5){
 }
 
 # -- Plot the screeplot showing the canonical correlations for 180 vs.5 CCA
-pdf("/Users/jielisaji/Dropbox/N-BRIDGE/BSNIP_Analyses/Figures/BSNIP_CCA_Images/BSNIP_CCA_ParcellatedN180B5_RhoScreeplot.pdf", width=8,height=6)
+pdf("CCA_ParcellatedN180B5_RhoScreeplot.pdf", width=10,height=6)
 plotdatPN180B5 <- cbind("Mode"=1:dim(ccNP180B5.permVartest$rho)[1],ccNP180B5.permVartest$rho)
 xcoordi <- c(rbind((1:dim(ccNP180B5.permVartest$rho)[1])-0.5,(1:dim(ccNP180B5.permVartest$rho)[1])-0.5), (dim(ccNP180B5.permVartest$rho)[1])+0.5)
 xcoord <- head(c(xcoordi, rev(xcoordi))[-1], -1)
@@ -484,9 +488,9 @@ ggplot(plotdatPN180B5, aes(x=Mode, y=stat0rho)) +
   theme2
 dev.off()
 
-
 # -- Plot the screeplot showing behavioral variance explained for 180 vs. 5 CCA, scaled by total symptom variance explained by the symptom PCs
 proptotvar = 0.5093
+pdf("CCA_ParcellatedN180B5_BehaviorVarianceScreeplot.pdf", width=10,height=6)
 plotdatPN180B5 <- cbind("Mode"=1:dim(ccNP180B5.permVartest$X)[1], proptotvar*ccNP180B5.permVartest$X)
 xcoordi <- c(rbind((1:dim(ccNP180B5.permVartest$X)[1])-0.5,(1:dim(ccNP180B5.permVartest$X)[1])-0.5), (dim(ccNP180B5.permVartest$X)[1])+0.5)
 xcoord <- head(c(xcoordi, rev(xcoordi))[-1], -1)
@@ -505,6 +509,7 @@ ggplot(plotdatPN180B5, aes(x=Mode, y=stat0X)) +
 dev.off()
 
 # -- Plot the screeplot showing neural variance explained for 180 vs. 5 CCA
+pdf("CCA_ParcellatedN180B5_NeuralVarianceScreeplot.pdf", width=10,height=6)
 plotdatPN180B5 <- cbind("Mode"=1:dim(ccNP180B5.permVartest$Y)[1], ccNP180B5.permVartest$Y)
 xcoordi <- c(rbind((1:dim(ccNP180B5.permVartest$Y)[1])-0.5,(1:dim(ccNP180B5.permVartest$Y)[1])-0.5), (dim(ccNP180B5.permVartest$Y)[1])+0.5)
 xcoord <- head(c(xcoordi, rev(xcoordi))[-1], -1)
@@ -523,6 +528,7 @@ ggplot(plotdatPN180B5, aes(x=Mode, y=stat0Y)) +
 dev.off()
 
 # -- Pie chart of total behavioral var explained in 180 vs. 5 CCA, scaled by total symptom variance explained by the symptom PCs
+pdf("CCA_ParcellatedN180B5_BehaviorPiechart.pdf", width=10,height=6)
 proptotvar = 0.5093
 pve_prop10 <- data.frame("Type"=c("Explained","Not Explained"),"Total Variance"=c(proptotvar*sum(colMeans(ccNP180B5$scores$corr.X.yscores^2)), 1-proptotvar*sum(colMeans(ccNP180B5$scores$corr.X.yscores^2))))
 ggplot(data=pve_prop10,aes(x=factor(1),y=Total.Variance,fill=factor(Type))) +
@@ -542,6 +548,7 @@ ggplot(data=pve_prop10,aes(x=factor(1),y=Total.Variance,fill=factor(Type))) +
 dev.off()
 
 # -- Pie chart of total neural var explained in 180 vs. 5 CCA
+pdf("CCA_ParcellatedN180B5_NeuralPiechart.pdf", width=10,height=6)
 pve_prop10n <- data.frame("Type"=c("Explained","Not Explained"),"Total Variance"=c(sum(colMeans(ccNP180B5$scores$corr.Y.xscores^2)), 1-sum(colMeans(ccNP180B5$scores$corr.Y.xscores^2))))
 ggplot(data=pve_prop10n,aes(x=factor(1),y=Total.Variance,fill=factor(Type))) +
   geom_bar(width = 1, stat = "identity") +
@@ -562,36 +569,41 @@ dev.off()
 # -- Plot the scatterplot showing correlation between neural and behavioral scores for CV1
 # -- Do this for 180 vs 36 CCA
 scatdat9 <- data.frame(xscores=c(ccNP180B36$scores$xscores[,1]), yscores=c(ccNP180B36$scores$yscores[,1]), dx=factor(c("SADP","SCZP","BPP","SCZP","SADP","SCZP","SCZP","BPP","BPP","BPP","SCZP","BPP","SCZP","BPP","SCZP","SCZP","BPP","BPP","BPP","SADP","SCZP","SCZP","SCZP","BPP","BPP","SADP","BPP","SADP","BPP","SCZP","SADP","BPP","SADP","SCZP","BPP","BPP","SADP","SADP","BPP","SCZP","SCZP","SADP","BPP","SADP","SCZP","SADP","SADP","SADP","SADP","SCZP","SCZP","SADP","SADP","SCZP","BPP","SCZP","BPP","SCZP","SCZP","SADP","BPP","BPP","BPP","BPP","SADP","SCZP","BPP","BPP","SADP","BPP","BPP","BPP","BPP","SCZP","BPP","BPP","SADP","SCZP","SADP","SADP","SCZP","SADP","SCZP","SADP","BPP","SCZP","SCZP","SCZP","SADP","BPP","SCZP","SCZP","BPP","SCZP","SCZP","SCZP","SCZP","SADP","SADP","SCZP","SCZP","SCZP","SCZP","SCZP","SADP","BPP","BPP","SADP","SADP","SCZP","SCZP","BPP","BPP","SCZP","SADP","SCZP","SCZP","SCZP","BPP","SCZP","SADP","SADP","BPP","BPP","SCZP","SCZP","BPP","SCZP","BPP","SADP","SCZP","SADP","BPP","SADP","SADP","BPP","BPP","SADP","SADP","BPP","BPP","SADP","BPP","BPP","SCZP","SCZP","SCZP","BPP","BPP","BPP","BPP","SADP","SADP","SADP","SCZP","SCZP","SCZP","SCZP","BPP","SCZP","SCZP","SCZP","SADP","SCZP","SCZP","SCZP","SADP","SCZP","SCZP","SCZP","SCZP","BPP","SCZP","SADP","BPP","BPP","BPP","SCZP","SADP","SCZP","BPP","BPP","SCZP","SADP","SCZP","SADP","SCZP","BPP","SCZP","BPP","BPP","SADP","BPP","BPP","BPP","BPP","BPP","BPP","BPP","BPP","SADP","SCZP","SCZP","BPP","SADP","BPP","SCZP","SCZP","SCZP","SCZP","SADP","BPP","SCZP","SADP","SCZP","SCZP","BPP","BPP","BPP","BPP","BPP","BPP","SADP","SCZP","SADP","SADP","SCZP","SCZP","BPP","SCZP","BPP","BPP","SADP","BPP","SADP","SCZP","SADP","SCZP","SADP","SCZP","BPP","SCZP","SCZP","BPP","SADP","SADP","SADP","BPP","SADP","SCZP","SADP","SADP","BPP","SADP","SCZP","SCZP","SCZP","BPP","SCZP","SCZP","SCZP","SCZP","SADP","BPP","SCZP","SCZP","SADP","BPP","SCZP","BPP","BPP","SCZP","BPP","BPP","SCZP","BPP","SCZP","SADP","BPP","BPP","BPP","SCZP","SCZP","SADP","SCZP","SCZP","SCZP","SADP","SCZP","BPP","SCZP","SCZP","SADP","SADP","BPP","BPP","SADP","SADP","BPP","BPP","SCZP","SCZP","SADP","SADP","BPP","BPP","BPP","BPP","SCZP","SCZP","SCZP","SCZP","SCZP","BPP","SADP","SCZP","SCZP","SCZP","BPP","SADP","SCZP","SADP","SCZP","SCZP","BPP","BPP","SCZP","SCZP","SADP","BPP","SADP","BPP","SADP","SADP","SADP","SADP","SCZP","BPP","SADP","BPP","SCZP","SADP","BPP","BPP","BPP","SCZP","SADP","SADP","SADP","SCZP","BPP","SCZP","SCZP","SCZP","SADP","BPP","BPP","SCZP","SCZP","BPP","SADP","SADP","SCZP","SADP","SADP","SADP","SCZP","SADP","SCZP","SADP","SADP","SADP","SADP","SCZP","BPP","SCZP","BPP","SADP","SCZP","SCZP","BPP","SADP","SCZP","BPP","SCZP","BPP","SCZP","SADP","BPP","SCZP","SCZP","BPP","SCZP","BPP","BPP","BPP","SADP","SCZP","BPP","SCZP","BPP","SCZP","BPP","SCZP","SADP","SCZP","SADP","BPP","SADP","SCZP","SCZP","SCZP","SADP","BPP","SADP","BPP","SCZP","BPP","BPP","BPP","BPP","SADP","SADP","SADP","SCZP","SADP","SCZP","BPP","SADP","SCZP","BPP","SCZP","BPP","BPP","BPP","SCZP")))
+pdf("CCA_ParcellatedN180B36_CV1_Scores_Scatterplot.pdf", width=6,height=6)
 ggplot(scatdat9,aes(x=xscores,y=yscores, col=dx)) +
   geom_point(alpha=0.7, size=3) +
   scale_colour_manual(values = c("BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
   scale_x_continuous(expand = c(0, 0),limits=c(-4.6,4.6), breaks=seq(-4,4,8),labels=seq(-4,4,8)) +
   scale_y_continuous(expand = c(0, 0),limits=c(-4.6,4.6), breaks=seq(-4,4,8),labels=seq(-4,4,8)) +
-  xlab("") +
-  ylab("") +
+  xlab("Behavioral CV1 score") +
+  ylab("Neural CV1 score") +
   theme1
 dev.off()
 
 # -- Do this for 180 vs 5 CCA
 scatdat10 <- data.frame(xscores=c(ccNP180B5$scores$xscores[,1]), yscores=c(ccNP180B5$scores$yscores[,1]), dx=factor(c("SADP","SCZP","BPP","SCZP","SADP","SCZP","SCZP","BPP","BPP","BPP","SCZP","BPP","SCZP","BPP","SCZP","SCZP","BPP","BPP","BPP","SADP","SCZP","SCZP","SCZP","BPP","BPP","SADP","BPP","SADP","BPP","SCZP","SADP","BPP","SADP","SCZP","BPP","BPP","SADP","SADP","BPP","SCZP","SCZP","SADP","BPP","SADP","SCZP","SADP","SADP","SADP","SADP","SCZP","SCZP","SADP","SADP","SCZP","BPP","SCZP","BPP","SCZP","SCZP","SADP","BPP","BPP","BPP","BPP","SADP","SCZP","BPP","BPP","SADP","BPP","BPP","BPP","BPP","SCZP","BPP","BPP","SADP","SCZP","SADP","SADP","SCZP","SADP","SCZP","SADP","BPP","SCZP","SCZP","SCZP","SADP","BPP","SCZP","SCZP","BPP","SCZP","SCZP","SCZP","SCZP","SADP","SADP","SCZP","SCZP","SCZP","SCZP","SCZP","SADP","BPP","BPP","SADP","SADP","SCZP","SCZP","BPP","BPP","SCZP","SADP","SCZP","SCZP","SCZP","BPP","SCZP","SADP","SADP","BPP","BPP","SCZP","SCZP","BPP","SCZP","BPP","SADP","SCZP","SADP","BPP","SADP","SADP","BPP","BPP","SADP","SADP","BPP","BPP","SADP","BPP","BPP","SCZP","SCZP","SCZP","BPP","BPP","BPP","BPP","SADP","SADP","SADP","SCZP","SCZP","SCZP","SCZP","BPP","SCZP","SCZP","SCZP","SADP","SCZP","SCZP","SCZP","SADP","SCZP","SCZP","SCZP","SCZP","BPP","SCZP","SADP","BPP","BPP","BPP","SCZP","SADP","SCZP","BPP","BPP","SCZP","SADP","SCZP","SADP","SCZP","BPP","SCZP","BPP","BPP","SADP","BPP","BPP","BPP","BPP","BPP","BPP","BPP","BPP","SADP","SCZP","SCZP","BPP","SADP","BPP","SCZP","SCZP","SCZP","SCZP","SADP","BPP","SCZP","SADP","SCZP","SCZP","BPP","BPP","BPP","BPP","BPP","BPP","SADP","SCZP","SADP","SADP","SCZP","SCZP","BPP","SCZP","BPP","BPP","SADP","BPP","SADP","SCZP","SADP","SCZP","SADP","SCZP","BPP","SCZP","SCZP","BPP","SADP","SADP","SADP","BPP","SADP","SCZP","SADP","SADP","BPP","SADP","SCZP","SCZP","SCZP","BPP","SCZP","SCZP","SCZP","SCZP","SADP","BPP","SCZP","SCZP","SADP","BPP","SCZP","BPP","BPP","SCZP","BPP","BPP","SCZP","BPP","SCZP","SADP","BPP","BPP","BPP","SCZP","SCZP","SADP","SCZP","SCZP","SCZP","SADP","SCZP","BPP","SCZP","SCZP","SADP","SADP","BPP","BPP","SADP","SADP","BPP","BPP","SCZP","SCZP","SADP","SADP","BPP","BPP","BPP","BPP","SCZP","SCZP","SCZP","SCZP","SCZP","BPP","SADP","SCZP","SCZP","SCZP","BPP","SADP","SCZP","SADP","SCZP","SCZP","BPP","BPP","SCZP","SCZP","SADP","BPP","SADP","BPP","SADP","SADP","SADP","SADP","SCZP","BPP","SADP","BPP","SCZP","SADP","BPP","BPP","BPP","SCZP","SADP","SADP","SADP","SCZP","BPP","SCZP","SCZP","SCZP","SADP","BPP","BPP","SCZP","SCZP","BPP","SADP","SADP","SCZP","SADP","SADP","SADP","SCZP","SADP","SCZP","SADP","SADP","SADP","SADP","SCZP","BPP","SCZP","BPP","SADP","SCZP","SCZP","BPP","SADP","SCZP","BPP","SCZP","BPP","SCZP","SADP","BPP","SCZP","SCZP","BPP","SCZP","BPP","BPP","BPP","SADP","SCZP","BPP","SCZP","BPP","SCZP","BPP","SCZP","SADP","SCZP","SADP","BPP","SADP","SCZP","SCZP","SCZP","SADP","BPP","SADP","BPP","SCZP","BPP","BPP","BPP","BPP","SADP","SADP","SADP","SCZP","SADP","SCZP","BPP","SADP","SCZP","BPP","SCZP","BPP","BPP","BPP","SCZP")))
+pdf("CCA_ParcellatedN180B5_CV1_Scores_Scatterplot.pdf", width=6,height=6)
 ggplot(scatdat10,aes(x=xscores,y=yscores, col=dx)) +
   geom_point(alpha=0.7, size=3) +
   scale_colour_manual(values = c("BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
   scale_x_continuous(expand = c(0, 0),limits=c(-4.6,3.6), breaks=seq(-4,3,7),labels=seq(-4,3,7)) +
   scale_y_continuous(expand = c(0, 0),limits=c(-4.6,3.6), breaks=seq(-4,3,7),labels=seq(-4,3,7)) +
-  xlab("") +
-  ylab("") +
+  xlab("Behavioral CV1 score") +
+  ylab("Neural CV1 score") +
   theme1
 dev.off()
 
 # -- Plot the ridgeline plots showing distributions of scores in each diagnostic category
 ### ! Flipped signs to follow convention in figure!
-gbc180beh5_ccascoresPSDG <- cbind(Group, as.data.frame(t(t(ccNP180B5$scores$xscores)*signs)))
+gbc180beh5_ccascoresPSDG <- cbind(Group, as.data.frame(t(t(ccNP180B5$scores$yscores)*signs)))
 
-# -- Project controls!
+# -- Read control data
 behpc_CON_raw <- read.table("../fig1_symptom_pca_analyses/BSNIP_CON202_AllPCScores.txt")
 behpc_CON <- behpc_CON_raw[,1:5]
-gbc180beh5_ccascoresCON <- as.data.frame(as.matrix(behpc_CON)%*%t(t(ccNP180B5$xcoef)*signs))
+gbcCON_180pS <- t(read.table("BSNIP_CON_N202_GBC_180P_SymmetrizedCortex.txt"))
+
+# -- Project controls!
+gbc180beh5_ccascoresCON <- as.data.frame(as.matrix(gbcCON_180pS)%*%t(t(ccNP180B5$ycoef)*signs))
 
 # -- Normalize all groups to controls
 gbc180beh5_ccascoresCON_Z <- scale(gbc180beh5_ccascoresCON)[,]
@@ -604,6 +616,7 @@ gbc180beh5_ccascoresALL_Z$Group <- factor(gbc180beh5_ccascoresALL_Z$Group, level
 gbc180beh5_ccascoresALL_Zmeans <- aggregate(gbc180beh5_ccascoresALL_Z,by=list(gbc180beh5_ccascoresALL_Z$Group), FUN="mean")
 
 # -- Plot CV score distributions for each of the behavioral CVs in the 180 vs 5 CCA
+pdf("CCA_ParcellatedN180B5_CV1_NormalizedScoresDistributions.pdf", width=8,height=6)
 ggplot(gbc180beh5_ccascoresALL_Z, aes(x=V1, y=Group,group=Group)) + 
   geom_density_ridges(aes(fill=Group), lwd=2, rel_min_height = 0.0000005, scale=1.5) +
   scale_fill_manual(values = c("CON"="white","PSD"="black","BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -619,6 +632,7 @@ ggplot(gbc180beh5_ccascoresALL_Z, aes(x=V1, y=Group,group=Group)) +
   geom_vline(xintercept=gbc180beh5_ccascoresALL_Zmeans$V1[5], lty=2,col="grey",lwd=3)
 dev.off()
 
+pdf("CCA_ParcellatedN180B5_CV2_NormalizedScoresDistributions.pdf", width=8,height=6)
 ggplot(gbc180beh5_ccascoresALL_Z, aes(x=V2, y=Group,group=Group)) + 
   geom_density_ridges(aes(fill=Group), lwd=2, rel_min_height = 0.001, scale=1) +
   scale_fill_manual(values = c("CON"="white","PSD"="black","BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -634,6 +648,7 @@ ggplot(gbc180beh5_ccascoresALL_Z, aes(x=V2, y=Group,group=Group)) +
   geom_vline(xintercept=gbc180beh5_ccascoresALL_Zmeans$V2[5], lty=2,col="grey",lwd=3)
 dev.off()
 
+pdf("CCA_ParcellatedN180B5_CV3_NormalizedScoresDistributions.pdf", width=8,height=6)
 ggplot(gbc180beh5_ccascoresALL_Z, aes(x=V3, y=Group,group=Group)) + 
   geom_density_ridges(aes(fill=Group), lwd=2, rel_min_height = 0.001, scale=1.5) +
   scale_fill_manual(values = c("CON"="white","PSD"="black","BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -649,6 +664,7 @@ ggplot(gbc180beh5_ccascoresALL_Z, aes(x=V3, y=Group,group=Group)) +
   geom_vline(xintercept=gbc180beh5_ccascoresALL_Zmeans$V3[5], lty=2,col="grey",lwd=3)
 dev.off()
 
+pdf("CCA_ParcellatedN180B5_CV4_NormalizedScoresDistributions.pdf", width=8,height=6)
 ggplot(gbc180beh5_ccascoresALL_Z, aes(x=V4, y=Group,group=Group)) + 
   geom_density_ridges(aes(fill=Group), lwd=2, rel_min_height = 0.001, scale=1.5) +
   scale_fill_manual(values = c("CON"="white","PSD"="black","BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -664,6 +680,7 @@ ggplot(gbc180beh5_ccascoresALL_Z, aes(x=V4, y=Group,group=Group)) +
   geom_vline(xintercept=gbc180beh5_ccascoresALL_Zmeans$V4[5], lty=2,col="grey",lwd=3)
 dev.off()
 
+pdf("CCA_ParcellatedN180B5_CV5_NormalizedScoresDistributions.pdf", width=8,height=6)
 ggplot(gbc180beh5_ccascoresALL_Z, aes(x=V5, y=Group,group=Group)) + 
   geom_density_ridges(aes(fill=Group), lwd=2, rel_min_height = 0.00001, scale=1.5) +
   scale_fill_manual(values = c("CON"="white","PSD"="black","BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -679,9 +696,9 @@ ggplot(gbc180beh5_ccascoresALL_Z, aes(x=V5, y=Group,group=Group)) +
   geom_vline(xintercept=gbc180beh5_ccascoresALL_Zmeans$V5[5], lty=2,col="grey",lwd=3)
 dev.off()
 
-# -- Compute loadings of the original 36 symptom measures on CVs in the 180 vs. 5 CCA
+# -- Compute coef of the original 36 symptom measures on CVs in the 180 vs. 5 CCA
 PCArot <- read.table("/Users/jielisaji/Dropbox/N-BRIDGE/BSNIP_Analyses/Data/PCArotations.txt")
-CVbehload <- as.data.frame(as.matrix(PCArot[,1:5]) %*% as.matrix(ccNP180B5behloadings[2:6]))
+CVbehload <- as.data.frame(as.matrix(PCArot[,1:5]) %*% as.matrix(ccNP180B5behcoef[2:6]))
 
 # -- Radar plots
 for (cvno in 1:5){
@@ -697,6 +714,7 @@ Sxcols=c("#004E2E","#005F38","#006E45","#008953","#009E5D","#00B669",
          "#F702A6","#FF3DB9","#FF5ABE","#FF7FD4","#FFA1E4","#FEB5EB")
 
 for (cvno in 1:5){
-  radarchartvar(get(paste0("CV",cvno,"rad")), axistype=0, seglty = 1, seglwd = 2, segcol=c("grey"), cglty=1, cglwd=2, vlabels="", cglcol=c(Sxcols), pcol="grey30", plwd=12, seg=2)
+  pdf(paste0("CCA_ParcellatedN180B5_CV",cvno,"_RadarplotBehaviorLoadings.pdf"), width=6,height=6)
+  radarchartvar(get(paste0("CV",cvno,"rad")), axistype=0, seglty = 1, seglwd = 2, segcol=c("grey"), cglty=1, cglwd=2, vlabels="", cglcol=c(Sxcols), pcol="grey30", plwd=8, seg=2)
   dev.off()
 }

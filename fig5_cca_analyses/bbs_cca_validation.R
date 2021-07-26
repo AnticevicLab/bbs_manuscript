@@ -1,5 +1,5 @@
 rm(list = ls())
-#setwd("/Users/jielisaji/Dropbox/bbs_manuscript/fig5_cca_analyses")
+setwd("../fig5_cca_analyses")
 library(ggplot2)
 library(GGally)
 library(CCA)
@@ -192,6 +192,7 @@ behwcorshRepDF <- data.frame("CV"=1:5, "R"=abs(behwcor))
 DFsummshbehwRep <- summarySE(behwcorshRepDF, measurevar="R", groupvars=c("CV"))
 
 # -- Plot the summary barchart of symptom PC loadings across 1k split-half runs for 5 CVs
+pdf("CCA_SplitHalf_PCWeights.pdf",height=6,width=8)
 ggplot(DFsummshXcoefRep, aes(x=CV, y=R)) +
   geom_hline(yintercept=1, col="red", lwd=1.5) +
   geom_bar(position="dodge", width=0.9, stat = "summary", fun.y = "mean",, fill=c("#485C77")) +
@@ -209,6 +210,7 @@ ggplot(DFsummshXcoefRep, aes(x=CV, y=R)) +
 dev.off()
 
 # -- Plot the summary barchart of neural loadings across 1k split-half runs for 5 CVs
+pdf("CCA_SplitHalf_NeuralWeights.pdf",height=6,width=8)
 ggplot(DFsummshYcoefRep, aes(x=CV, y=R)) +
   geom_hline(yintercept=1, col="red", lwd=1.5) +
   geom_bar(position="dodge", width=0.9, stat = "summary", fun.y = "mean",, fill=c("#485C77")) +
@@ -227,6 +229,7 @@ ggplot(DFsummshYcoefRep, aes(x=CV, y=R)) +
         axis.line = element_line(colour = "black", size = 1))
 dev.off()
 
+pdf("CCA_SplitHalf_SymptomMeasureWeights.pdf",height=6,width=8)
 ggplot(DFsummshbehwRep, aes(x=CV, y=R)) +
   geom_hline(yintercept=1, col="red", lwd=1.5) +
   geom_bar(position="dodge", width=0.9, stat = "summary", fun.y = "mean",, fill=c("#485C77")) +
@@ -246,6 +249,7 @@ ggplot(DFsummshbehwRep, aes(x=CV, y=R)) +
 dev.off()
 
 # -- Plot the scatterplot between N loadings for H1 and H2 in one exemplar run
+pdf("CCA_SplitHalf_CV3_CorrelationScatterplot.pdf",height=6,width=6)
 cv3neuralSHDF <- data.frame("H1"=ccaH1$ycoef[,3], "H2"=ccaH2$ycoef[,3])
 ggplot(cv3neuralSHDF, aes(x=H1, y=H2, col=H2)) +
   geom_point(size=3, alpha=0.7)+
@@ -308,6 +312,7 @@ for (i in 1:nsubs) {
 # -- Plot exemplar CV3 leave-one-out CCA
 cv3predDF <- data.frame("PredX"=predX[,3], "PredY"=predY[,3])
 
+pdf("CCA_LeaveOneOut_PredScores_CV3.pdf", height=6, width=6)
 ggplot(cv3predDF, aes(x=PredX, y=PredY, col=Group)) +
   geom_point(size=3, alpha=0.7)+
   scale_colour_manual(values = c("BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -328,6 +333,7 @@ dev.off()
 # -- Plot the summary of leave-one-out predicted CCA corr vs observed
 ccaall <- cc(behpc, gbcPSD_180pS)
 predDF <- data.frame("CV"=1:5,"r"=diag(cor(predX,predY)), "CanCor"=ccaall$cor)
+pdf("CCA_LeaveOneOut_PredScores_Summary.pdf", height=6, width=8)
 ggplot(predDF, aes(x=CV,y=r)) +
 	#geom_hline(yintercept=1, col="red", lwd=1.5) +
 	geom_segment(aes(x=c(0.5,1.5,2.5,3.5,4.5), y=CanCor, xend=c(1.5,2.5,3.5,4.5,5.5), yend=CanCor), size=1.5,col="red") +

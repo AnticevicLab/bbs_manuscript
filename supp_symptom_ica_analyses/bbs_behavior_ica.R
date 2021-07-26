@@ -1,5 +1,5 @@
 rm(list = ls())
-setwd("bbs_manuscript/supp_symptom_ica_analyses")
+setwd("../supp_symptom_ica_analyses")
 library("ica")
 library("Hmisc")
 library("gplots")
@@ -35,6 +35,7 @@ names(pcaica5)[6:10] <- c("IC1","IC2","IC3","IC4","IC5")
 pcaica5r <- rcorr(as.matrix(pcaica5))
 pcaica5rplot <- pcaica5r$r[6:10,1:5]
 colours=colorRampPalette(c("blue","white","red"))(99)
+pdf("Symptom_PCA_ICA_ComponentScoreCorrelationHeatmap.pdf",height=8,width=8)
 heatmap.2(pcaica5rplot, 
           Rowv=FALSE, 
           Colv=FALSE,
@@ -59,6 +60,7 @@ heatmap.2(pcaica5rplot,
 dev.off()
 
 # -- Plot screeplot of variance explained
+pdf("Symptom_ICA_VarianceExplainedScreeplot.pdf",height=8,width=10)
 prop_var5 <- data.frame("IC"=1:5, "Variance"=icaA$vafs)
 ggplot(data=prop_var5, aes(x=IC, y=Variance)) +
   geom_line(lwd=1.2)+
@@ -78,6 +80,7 @@ ggplot(data=prop_var5, aes(x=IC, y=Variance)) +
 dev.off()
 
 # -- Plot piechart variance explained
+pdf("Symptom_ICA_VarianceExplainedPiechart.pdf",height=8,width=10)
 pveIC_prop <- data.frame(ICs=c("1-5","Unaccounted"),"Total Variance"=c(sum(prop_var5$Variance[1:5]),1-sum(prop_var5$Variance[1:5])))
 ggplot(data=pveIC_prop,aes(x=factor(1),y=Total.Variance,fill=factor(ICs))) +
   geom_bar(width = 1, stat = "identity") +

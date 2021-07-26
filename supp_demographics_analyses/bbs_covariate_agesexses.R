@@ -1,3 +1,7 @@
+rm(list = ls())
+setwd("../supp_demographics_analyses")
+library(ggplot2)
+
 # -- Themes
 theme1<- theme(panel.border = element_rect(size = 2, colour = 'NA', fill='NA'), 
                axis.line = element_line(colour = "black", size = 2),
@@ -51,12 +55,11 @@ summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
 }
 
 #-- Get sex, sex, ses (from available B-SNIP data)
-beh_raw = read.table("Data/BSNIP_PROB_N436_Behavior.dat", sep="\t", header=TRUE)
-beh=beh_raw[1:436,3:38]
+beh_raw = read.table("../data_symptoms/BSNIP_PSD_N436_Behavior.dat", sep="\t", header=TRUE)
+beh=beh_raw[1:436,2:37]
 panss <-beh[1:436,7:36]
 bacs <- beh[1:436,1:6]
 pcall = prcomp(beh, scale. = TRUE)
-#pcall <- read.table("Data/PCAscoresPROB_origorder.txt", sep="\t", header=TRUE)
 
 # -- Load Sex
 sex <-c("F","M","F","M","M","F","M","M","F","M","F","F","M","F","M","M","M","F","F","M","F","F","F","F","F","F","F","F","F","M","M","M","F","F","F","F","M","F","M","F","M","F","M","F","F","M","F","F","F","M","M","F","M","M","M","M","M","M","M","F","F","F","F","M","F","M","M","F","F","F","F","F","F","F","M","F","M","F","F","F","M","F","M","M","F","M","M","M","M","M","M","M","M","M","M","F","M","M","F","F","M","M","M","F","F","F","F","F","F","M","F","M","M","M","F","M","M","M","F","M","M","M","F","F","F","F","F","M","M","M","M","M","F","M","F","F","F","F","M","M","F","M","F","F","M","F","F","F","M","M","M","M","M","M","M","M","M","M","F","F","M","M","F","M","F","F","F","F","F","M","M","M","M","F","F","F","F","F","F","M","F","F","M","F","F","M","M","F","M","F","M","F","F","M","M","M","F","M","F","M","M","M","M","M","M","M","F","F","F","M","F","F","M","F","M","F","M","F","F","F","F","F","F","M","F","M","M","F","F","M","F","F","F","M","F","M","M","F","M","F","F","M","F","M","F","M","M","F","M","M","F","F","M","M","F","F","M","M","M","F","M","M","F","F","M","F","M","F","M","M","F","M","F","F","F","F","M","F","F","F","F","M","M","F","F","M","M","M","M","F","M","M","F","F","F","M","M","M","F","F","M","M","F","M","F","M","M","F","F","M","M","M","F","F","F","M","F","M","F","F","M","M","M","M","F","F","M","M","F","M","F","F","M","F","M","M","F","F","F","M","F","M","F","M","F","M","M","M","M","F","F","F","M","M","F","F","F","M","M","F","F","F","M","F","M","M","F","F","M","F","F","F","M","F","F","M","F","F","M","M","M","M","F","F","M","F","M","M","F","M","M","F","M","F","F","F","F","F","F","F","F","M","F","F","M","M","M","F","F","M","M","F","F","F","F","M","M","M","F","M","M","M","F","M","M","M","M","M","F","F","F","M","F","F","F","F")
@@ -65,6 +68,7 @@ sexdf <- data.frame("Sex"=sex, "PC1"=pcall$x[,1],"PC2"=pcall$x[,2],"PC3"=pcall$x
 sexdf_m <- aggregate(sexdf, by=list(sexdf$Sex), FUN="mean")[,-2]
 
 for (pcno in 1:5){
+  pdf(paste0("Symptom_PCA_SexDifferences_Distributions_PC", pcno, ".pdf"), height=6,width=6)
   q <- ggplot(sexdf, aes(x=get(paste0("PC",pcno)),y=Sex, group=Sex)) + 
   geom_density_ridges(aes(fill=Sex), lwd=2, rel_min_height = 0.0005) +
   scale_fill_manual(values = c("F"="grey70", "M"="grey70")) +
@@ -82,6 +86,7 @@ for (pcno in 1:5){
         axis.ticks = element_line(colour = "black", size=2),
         axis.ticks.length = unit(.4, "cm"))       	
   print(q)
+  dev.off()
 }
 
 # -- Bar plots for mean effect of sex
@@ -92,7 +97,8 @@ sexPC4df_summ <- summarySE(sexdf, measurevar="PC4", groupvars=c("Sex"))
 sexPC5df_summ <- summarySE(sexdf, measurevar="PC5", groupvars=c("Sex"))
 
 for (pcno in 1:5){
-q <-  ggplot(data=get(paste0("sexPC",pcno,"df_summ")), aes(x=Sex,y=get(paste0("PC",pcno)), fill=Sex)) +
+  pdf(paste0("Symptom_PCA_SexDifferences_BoxPlot_PC", pcno, ".pdf"), height=6,width=6)
+  q <-  ggplot(data=get(paste0("sexPC",pcno,"df_summ")), aes(x=Sex,y=get(paste0("PC",pcno)), fill=Sex)) +
       geom_col() +
       scale_fill_manual(values = c("F"="grey70","M"="grey70")) +
       theme1 +
@@ -123,6 +129,7 @@ agedf <- data.frame("Age"=age, "PC1"=pcall$x[,1],"PC2"=pcall$x[,2],"PC3"=pcall$x
 Group=c("SADP","SCZP","BPP","SCZP","SADP","SCZP","SCZP","BPP","BPP","BPP","SCZP","BPP","SCZP","BPP","SCZP","SCZP","BPP","BPP","BPP","SADP","SCZP","SCZP","SCZP","BPP","BPP","SADP","BPP","SADP","BPP","SCZP","SADP","BPP","SADP","SCZP","BPP","BPP","SADP","SADP","BPP","SCZP","SCZP","SADP","BPP","SADP","SCZP","SADP","SADP","SADP","SADP","SCZP","SCZP","SADP","SADP","SCZP","BPP","SCZP","BPP","SCZP","SCZP","SADP","BPP","BPP","BPP","BPP","SADP","SCZP","BPP","BPP","SADP","BPP","BPP","BPP","BPP","SCZP","BPP","BPP","SADP","SCZP","SADP","SADP","SCZP","SADP","SCZP","SADP","BPP","SCZP","SCZP","SCZP","SADP","BPP","SCZP","SCZP","BPP","SCZP","SCZP","SCZP","SCZP","SADP","SADP","SCZP","SCZP","SCZP","SCZP","SCZP","SADP","BPP","BPP","SADP","SADP","SCZP","SCZP","BPP","BPP","SCZP","SADP","SCZP","SCZP","SCZP","BPP","SCZP","SADP","SADP","BPP","BPP","SCZP","SCZP","BPP","SCZP","BPP","SADP","SCZP","SADP","BPP","SADP","SADP","BPP","BPP","SADP","SADP","BPP","BPP","SADP","BPP","BPP","SCZP","SCZP","SCZP","BPP","BPP","BPP","BPP","SADP","SADP","SADP","SCZP","SCZP","SCZP","SCZP","BPP","SCZP","SCZP","SCZP","SADP","SCZP","SCZP","SCZP","SADP","SCZP","SCZP","SCZP","SCZP","BPP","SCZP","SADP","BPP","BPP","BPP","SCZP","SADP","SCZP","BPP","BPP","SCZP","SADP","SCZP","SADP","SCZP","BPP","SCZP","BPP","BPP","SADP","BPP","BPP","BPP","BPP","BPP","BPP","BPP","BPP","SADP","SCZP","SCZP","BPP","SADP","BPP","SCZP","SCZP","SCZP","SCZP","SADP","BPP","SCZP","SADP","SCZP","SCZP","BPP","BPP","BPP","BPP","BPP","BPP","SADP","SCZP","SADP","SADP","SCZP","SCZP","BPP","SCZP","BPP","BPP","SADP","BPP","SADP","SCZP","SADP","SCZP","SADP","SCZP","BPP","SCZP","SCZP","BPP","SADP","SADP","SADP","BPP","SADP","SCZP","SADP","SADP","BPP","SADP","SCZP","SCZP","SCZP","BPP","SCZP","SCZP","SCZP","SCZP","SADP","BPP","SCZP","SCZP","SADP","BPP","SCZP","BPP","BPP","SCZP","BPP","BPP","SCZP","BPP","SCZP","SADP","BPP","BPP","BPP","SCZP","SCZP","SADP","SCZP","SCZP","SCZP","SADP","SCZP","BPP","SCZP","SCZP","SADP","SADP","BPP","BPP","SADP","SADP","BPP","BPP","SCZP","SCZP","SADP","SADP","BPP","BPP","BPP","BPP","SCZP","SCZP","SCZP","SCZP","SCZP","BPP","SADP","SCZP","SCZP","SCZP","BPP","SADP","SCZP","SADP","SCZP","SCZP","BPP","BPP","SCZP","SCZP","SADP","BPP","SADP","BPP","SADP","SADP","SADP","SADP","SCZP","BPP","SADP","BPP","SCZP","SADP","BPP","BPP","BPP","SCZP","SADP","SADP","SADP","SCZP","BPP","SCZP","SCZP","SCZP","SADP","BPP","BPP","SCZP","SCZP","BPP","SADP","SADP","SCZP","SADP","SADP","SADP","SCZP","SADP","SCZP","SADP","SADP","SADP","SADP","SCZP","BPP","SCZP","BPP","SADP","SCZP","SCZP","BPP","SADP","SCZP","BPP","SCZP","BPP","SCZP","SADP","BPP","SCZP","SCZP","BPP","SCZP","BPP","BPP","BPP","SADP","SCZP","BPP","SCZP","BPP","SCZP","BPP","SCZP","SADP","SCZP","SADP","BPP","SADP","SCZP","SCZP","SCZP","SADP","BPP","SADP","BPP","SCZP","BPP","BPP","BPP","BPP","SADP","SADP","SADP","SCZP","SADP","SCZP","BPP","SADP","SCZP","BPP","SCZP","BPP","BPP","BPP","SCZP")
 
 for (pcno in 1:5){
+  pdf(paste0("Symptom_PCA_AgeEffect_Scatterplot_PC", pcno, ".pdf"), height=6,width=6)
 	q <- ggplot(agedf, aes(col=Group, x=Age, y=get(paste0("PC",pcno)))) +
 	geom_point(aes(col=Group),size=3) +
   scale_colour_manual(values = c("CON"="white","PROB"="black","BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -139,6 +146,7 @@ for (pcno in 1:5){
         axis.ticks = element_line(colour = "black", size=2),
         axis.ticks.length = unit(.4, "cm"))
 	print(q)
+  dev.off()
 }
 
 # -- Test SES significance
@@ -158,6 +166,7 @@ sesclassdf$SES <- as.factor(sesclassdf$SES)
 Group=c("SADP","SCZP","BPP","SCZP","SADP","SCZP","SCZP","BPP","BPP","BPP","SCZP","BPP","SCZP","BPP","SCZP","SCZP","BPP","BPP","BPP","SADP","SCZP","SCZP","SCZP","BPP","BPP","SADP","BPP","SADP","BPP","SCZP","SADP","BPP","SADP","SCZP","BPP","BPP","SADP","SADP","BPP","SCZP","SCZP","SADP","BPP","SADP","SCZP","SADP","SADP","SADP","SADP","SCZP","SCZP","SADP","SADP","SCZP","BPP","SCZP","BPP","SCZP","SCZP","SADP","BPP","BPP","BPP","BPP","SADP","SCZP","BPP","BPP","SADP","BPP","BPP","BPP","BPP","SCZP","BPP","BPP","SADP","SCZP","SADP","SADP","SCZP","SADP","SCZP","SADP","BPP","SCZP","SCZP","SCZP","SADP","BPP","SCZP","SCZP","BPP","SCZP","SCZP","SCZP","SCZP","SADP","SADP","SCZP","SCZP","SCZP","SCZP","SCZP","SADP","BPP","BPP","SADP","SADP","SCZP","SCZP","BPP","BPP","SCZP","SADP","SCZP","SCZP","SCZP","BPP","SCZP","SADP","SADP","BPP","BPP","SCZP","SCZP","BPP","SCZP","BPP","SADP","SCZP","SADP","BPP","SADP","SADP","BPP","BPP","SADP","SADP","BPP","BPP","SADP","BPP","BPP","SCZP","SCZP","SCZP","BPP","BPP","BPP","BPP","SADP","SADP","SADP","SCZP","SCZP","SCZP","SCZP","BPP","SCZP","SCZP","SCZP","SADP","SCZP","SCZP","SCZP","SADP","SCZP","SCZP","SCZP","SCZP","BPP","SCZP","SADP","BPP","BPP","BPP","SCZP","SADP","SCZP","BPP","BPP","SCZP","SADP","SCZP","SADP","SCZP","BPP","SCZP","BPP","BPP","SADP","BPP","BPP","BPP","BPP","BPP","BPP","BPP","BPP","SADP","SCZP","SCZP","BPP","SADP","BPP","SCZP","SCZP","SCZP","SCZP","SADP","BPP","SCZP","SADP","SCZP","SCZP","BPP","BPP","BPP","BPP","BPP","BPP","SADP","SCZP","SADP","SADP","SCZP","SCZP","BPP","SCZP","BPP","BPP","SADP","BPP","SADP","SCZP","SADP","SCZP","SADP","SCZP","BPP","SCZP","SCZP","BPP","SADP","SADP","SADP","BPP","SADP","SCZP","SADP","SADP","BPP","SADP","SCZP","SCZP","SCZP","BPP","SCZP","SCZP","SCZP","SCZP","SADP","BPP","SCZP","SCZP","SADP","BPP","SCZP","BPP","BPP","SCZP","BPP","BPP","SCZP","BPP","SCZP","SADP","BPP","BPP","BPP","SCZP","SCZP","SADP","SCZP","SCZP","SCZP","SADP","SCZP","BPP","SCZP","SCZP","SADP","SADP","BPP","BPP","SADP","SADP","BPP","BPP","SCZP","SCZP","SADP","SADP","BPP","BPP","BPP","BPP","SCZP","SCZP","SCZP","SCZP","SCZP","BPP","SADP","SCZP","SCZP","SCZP","BPP","SADP","SCZP","SADP","SCZP","SCZP","BPP","BPP","SCZP","SCZP","SADP","BPP","SADP","BPP","SADP","SADP","SADP","SADP","SCZP","BPP","SADP","BPP","SCZP","SADP","BPP","BPP","BPP","SCZP","SADP","SADP","SADP","SCZP","BPP","SCZP","SCZP","SCZP","SADP","BPP","BPP","SCZP","SCZP","BPP","SADP","SADP","SCZP","SADP","SADP","SADP","SCZP","SADP","SCZP","SADP","SADP","SADP","SADP","SCZP","BPP","SCZP","BPP","SADP","SCZP","SCZP","BPP","SADP","SCZP","BPP","SCZP","BPP","SCZP","SADP","BPP","SCZP","SCZP","BPP","SCZP","BPP","BPP","BPP","SADP","SCZP","BPP","SCZP","BPP","SCZP","BPP","SCZP","SADP","SCZP","SADP","BPP","SADP","SCZP","SCZP","SCZP","SADP","BPP","SADP","BPP","SCZP","BPP","BPP","BPP","BPP","SADP","SADP","SADP","SCZP","SADP","SCZP","BPP","SADP","SCZP","BPP","SCZP","BPP","BPP","BPP","SCZP")
 
 for (pcno in 1:5){
+  pdf(paste0("Symptom_PCA_SESEffect_Scatterplot_PC", pcno, ".pdf"), height=6,width=6)
 	q <- ggplot(sesdf, aes(col=Group, x=SES, y=get(paste0("PC",pcno)))) +
 	geom_point(aes(col=Group),size=3) +
   scale_colour_manual(values = c("CON"="white","PROB"="black","BPP"="#feb24c","SADP"="#fc4e2a","SCZP"="#800026")) +
@@ -175,6 +184,7 @@ for (pcno in 1:5){
         axis.ticks = element_line(colour = "black", size=2),
         axis.ticks.length = unit(.4, "cm"))
 	print(q)
+  dev.off()
 }
 
 # -- Test SES significance
@@ -193,7 +203,8 @@ sesPC4df_summ <- summarySE(sesclassdf, measurevar="PC4", groupvars=c("SES"))
 sesPC5df_summ <- summarySE(sesclassdf, measurevar="PC5", groupvars=c("SES"))
 
 for (pcno in 1:5){
-q <-  ggplot(data=get(paste0("sesPC",pcno,"df_summ")), aes(x=SES,y=get(paste0("PC",pcno)))) +
+  pdf(paste0("Symptom_PCA_SESEffect_ClassesBarplot_PC", pcno, ".pdf"), height=6,width=6)
+  q <-  ggplot(data=get(paste0("sesPC",pcno,"df_summ")), aes(x=SES,y=get(paste0("PC",pcno)))) +
       geom_col(col="grey50",fill="grey50") +
       scale_x_discrete(limits=c("1","2","3","4","5"),labels=c("1","2","3","4","5")) +
       theme1 +
@@ -209,6 +220,7 @@ q <-  ggplot(data=get(paste0("sesPC",pcno,"df_summ")), aes(x=SES,y=get(paste0("P
         axis.ticks = element_line(colour = "black", size=2),
         axis.ticks.length = unit(.4, "cm"))    
   print(q)
+  dev.off()
 }
 
 # -- Test significance
@@ -221,6 +233,7 @@ summary(aov(PC4 ~ SES, data = sesnonaclassdf))
 summary(aov(PC5 ~ SES, data = sesnonaclassdf))
 
 for (pcno in 1:5){
+  pdf(paste0("Symptom_PCA_SESEffect_ClassesDistributions_PC", pcno, ".pdf"), height=6,width=6)
 	q <- ggplot(sesnonaclassdf, aes(x=get(paste0("PC",pcno)),y=SES, group=SES)) +
   geom_density_ridges(fill=c("grey50"), lwd=2, rel_min_height = 0.0001) +
   geom_segment(aes(x = eval(parse(text=paste0("sesclassdf_m$PC", pcno)))[1], y=1.0,xend = eval(parse(text=paste0("sesclassdf_m$PC", pcno)))[1], yend = 2.0),size=2, linetype = 1,color = "white") +
@@ -240,4 +253,5 @@ for (pcno in 1:5){
         axis.ticks = element_line(colour = "black", size=2),
         axis.ticks.length = unit(.4, "cm"))    
 	print(q)
+  dev.off()
 }

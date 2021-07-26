@@ -1,5 +1,5 @@
 rm(list = ls())
-#setwd("/Users/jielisaji/Dropbox/bbs_manuscript/fig2_symptom_pca_stability_analyses")
+setwd("../fig2_symptom_pca_stability_analyses")
 library(matrixStats)
 library(ggplot2)
 library(plyr)
@@ -53,6 +53,7 @@ mtsortdiag <- function(mt){
                 return(mtf)
         } else {
                 return(mtb)
+        }
         }
 }
 
@@ -221,7 +222,7 @@ for (shuff in 1:nRep){
 for (shuff in 1:nRep){
 	for (half in c("H1","H2")){
 		for (pc in 1:5){
-			write.table(get(paste0(half,"Scores"))[,pc,shuff], file=paste0("SplitHalfScores_1kRuns/BSNIP_StratifiedPRB_",half,"Scores","_dPC",pc,"Run",shuff,".csv"), col.names=FALSE, row.names=FALSE)
+			write.table(get(paste0(half,"Scores"))[,pc,shuff], file=paste0("BSNIP_StratifiedPRB_",half,"Scores","_dPC",pc,"Run",shuff,".csv"), col.names=FALSE, row.names=FALSE)
 }}}
 
 # -- Organize the dataframef for plotting
@@ -229,6 +230,7 @@ shRepDF <- data.frame("PC"=1:5, "R"=abs(shdat))
 DFsummshRep <- summarySE(shRepDF, measurevar="R", groupvars=c("PC"))
 
 # -- Plot the mean and SE r-value between H1 and H2 across all runs
+pdf("BSNIP_SymptomPCA_SplitHalfComparison.pdf", width=8, height=6)
 ggplot(DFsummshRep, aes(x=PC, y=R, alpha=factor(PC))) +
   geom_hline(yintercept=1, col="red", lwd=1.5) +
   stat_summary(position="dodge", geom="bar", width=1, fun = "mean", fill=c("#485C77")) +

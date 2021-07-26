@@ -1,0 +1,1 @@
+Because of file size limits on Github, the PSD neural file has been split into two parts (BSNIP_PSD_N436_GSR.udvarsme.surface_gbc_mFz_Part1.dtseries.nii and BSNIP_PSD_N436_GSR.udvarsme.surface_gbc_mFz_Part2.dtseries.nii).

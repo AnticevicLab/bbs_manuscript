@@ -1,10 +1,31 @@
 ### -- This script is a continuation of the "../fig2_symptom_pca_stability_analyses/bbs_behavior_pca_cross-validation.R" script
 
-#setwd("/Users/jielisaji/Dropbox/bbs_manuscript/fig4_univariate_mapping_stability_analyses")
+setwd("../fig4_univariate_mapping_stability_analyses")
 
 ###############################
 ##### LOO Site Validation #####
 ###############################
+
+### Site effects
+# -- Read in the data from the beta_PC_GBC maps from LOSO
+for (map in c("Positive","General","Negative","Cognitive","PC1","PC2","PC3","PC4","PC5")){
+  assign(paste0(map,"S1") ,read.table(paste0("leave_one_site_out_maps/BSNIP_PSD_N436_GSR.udvarsme.CAB-NP-718_gbc_mFz_",map,"_SITE1trainN357_beta.txt")))
+  assign(paste0(map,"S2") ,read.table(paste0("leave_one_site_out_maps/BSNIP_PSD_N436_GSR.udvarsme.CAB-NP-718_gbc_mFz_",map,"_SITE2trainN339_beta.txt")))
+  assign(paste0(map,"S3") ,read.table(paste0("leave_one_site_out_maps/BSNIP_PSD_N436_GSR.udvarsme.CAB-NP-718_gbc_mFz_",map,"_SITE3trainN329_beta.txt")))
+  assign(paste0(map,"S4") ,read.table(paste0("leave_one_site_out_maps/BSNIP_PSD_N436_GSR.udvarsme.CAB-NP-718_gbc_mFz_",map,"_SITE4trainN339_beta.txt")))
+  assign(paste0(map,"S5") ,read.table(paste0("leave_one_site_out_maps/BSNIP_PSD_N436_GSR.udvarsme.CAB-NP-718_gbc_mFz_",map,"_SITE5trainN426_beta.txt")))
+  assign(paste0(map,"S6") ,read.table(paste0("leave_one_site_out_maps/BSNIP_PSD_N436_GSR.udvarsme.CAB-NP-718_gbc_mFz_",map,"_SITE6trainN390_beta.txt")))
+}
+
+PC1all       <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_PC1_ztstat.pscalar.txt")
+PC2all       <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_PC2_ztstat.pscalar.txt")
+PC3all       <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_PC3_ztstat.pscalar.txt")
+PC4all       <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_PC4_ztstat.pscalar.txt")
+PC5all       <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_PC5_ztstat.pscalar.txt")
+Posall       <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_Pos_ztstat.pscalar.txt")
+Negall       <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_Neg_ztstat.pscalar.txt")
+Genall       <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_Gen_ztstat.pscalar.txt")
+Cogall       <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_Cog_ztstat.pscalar.txt")
 
 # -- Organizing the data for plotting purposes 
 ## 1-CT ; 2-GP ; 3-GT ; 4-JS ; 5-MB ; 6-MK
@@ -25,6 +46,7 @@ sdat$Site[sdat$Site == "MK"] <- 6
 sdat$Site <- as.factor(sdat$Site)
 
 # -- Plot the exemplar scatterplot of betas for one run
+pdf("PC3_AllBetasVSLOSO.pdf", width=6, height=6)
 ggplot(data=PC3all, aes(x=V1,y=PC3S3$V1, col=PC3S3$V1)) +
   geom_point(size=3, alpha=0.8) +
   geom_smooth(method = lm, se=FALSE, col="forest green",lwd=4) +
@@ -44,28 +66,8 @@ ggplot(data=PC3all, aes(x=V1,y=PC3S3$V1, col=PC3S3$V1)) +
         axis.text.y = element_text(size = 25, color="black",angle=90,hjust=0.5,margin=margin(0,5,0,0)), 
         axis.title.y = element_text(size = 25,margin=margin(0,10,0,0)))
 dev.off()
+
 cor.test(PC3S3$V1,PC3all$V1)
-
-### Site effects
-# -- Read in the data from the beta_PC_GBC maps from LOSO
-for (map in c("Positive","General","Negative","Cognitive","PC1","PC2","PC3","PC4","PC5")){
-  assign(paste0(map,"S1") ,read.table(paste0("leave_one_site_out_maps/BSNIP_PSD_N436_GSR.udvarsme.CAB-NP-718_gbc_mFz_",map,"_SITE1trainN357_beta.txt")))
-  assign(paste0(map,"S2") ,read.table(paste0("leave_one_site_out_maps/BSNIP_PSD_N436_GSR.udvarsme.CAB-NP-718_gbc_mFz_",map,"_SITE2trainN339_beta.txt")))
-  assign(paste0(map,"S3") ,read.table(paste0("leave_one_site_out_maps/BSNIP_PSD_N436_GSR.udvarsme.CAB-NP-718_gbc_mFz_",map,"_SITE3trainN329_beta.txt")))
-  assign(paste0(map,"S4") ,read.table(paste0("leave_one_site_out_maps/BSNIP_PSD_N436_GSR.udvarsme.CAB-NP-718_gbc_mFz_",map,"_SITE4trainN339_beta.txt")))
-  assign(paste0(map,"S5") ,read.table(paste0("leave_one_site_out_maps/BSNIP_PSD_N436_GSR.udvarsme.CAB-NP-718_gbc_mFz_",map,"_SITE5trainN426_beta.txt")))
-  assign(paste0(map,"S6") ,read.table(paste0("leave_one_site_out_maps/BSNIP_PSD_N436_GSR.udvarsme.CAB-NP-718_gbc_mFz_",map,"_SITE6trainN390_beta.txt")))
-}
-
-PC1all       <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_PC1_ztstat.pscalar.txt")
-PC2all       <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_PC2_ztstat.pscalar.txt")
-PC3all       <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_PC3_ztstat.pscalar.txt")
-PC4all       <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_PC4_ztstat.pscalar.txt")
-PC5all       <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_PC5_ztstat.pscalar.txt")
-Positiveall  <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_Pos_ztstat.pscalar.txt")
-Negativeall  <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_Neg_ztstat.pscalar.txt")
-Generalall   <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_Gen_ztstat.pscalar.txt")
-Cognitiveall <-read.table("../fig3_univariate_mapping_analyses/univariate_maps/GBC_Cog_ztstat.pscalar.txt")
 
 # -- Organise the dataframe for plotting
 corSDF <- NULL
@@ -79,6 +81,7 @@ corSDF$r<-dmm::unfactor(corSDF$r)
 corSDF$Map <- factor(corSDF$Map, levels = c("Cognitive","Negative","Positive","General","PC1","PC2","PC3","PC4","PC5"))
 
 # -- Plot the summary of LOSO neural mapping for all maps
+pdf("UnivariateNeuralMaps_LOSO_Summary.pdf", width=10, height=6)
 cols <- rev(viridisLite::plasma(10))
 cols <- cols[-1]
 cols2 <- viridisLite::viridis(10)
@@ -158,6 +161,7 @@ Cogk4 <- read.table("k-fold_cross-validation_maps/BSNIP_PSD_N436_GSR.udvarsme.CA
 Cogk5 <- read.table("k-fold_cross-validation_maps/BSNIP_PSD_N436_GSR.udvarsme.CAB-NP-718_gbc_mFz_Cognitive_K5trainN349_beta.txt")
 
 # -- Scatterplot of correlation between parcel coefficients
+pdf("PC3_AllBetasVSkFold.pdf", width=6, height=6)
 ggplot(data=PC3all, aes(x=V1,y=PC3k1$V1, col=PC3all$V1)) +
   geom_point(size=3, alpha=0.8) +
   geom_smooth(method = lm, se=FALSE, col="forest green",lwd=4) +
@@ -189,6 +193,7 @@ names(corDF) <- c("Map", "k", "r")
 corDF$r<-dmm::unfactor(corDF$r)
 
 # -- Plot the summary boxplot figure of 5-fold CV for all PCs and A Priori maps
+pdf("UnivariateNeuralMaps_5foldCV_Summary.pdf", width=10, height=6)
 cols <- rev(viridisLite::plasma(10))
 cols <- cols[-1]
 ggplot(corDF, aes(x=Map, y=r, fill=factor(Map))) +

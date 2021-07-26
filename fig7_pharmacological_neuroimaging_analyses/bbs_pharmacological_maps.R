@@ -1,5 +1,5 @@
 # -- This script is a continuation of ../fig6_feature_selection_analyses/bsnip_featureselection.R
-setwd("/Users/jielisaji/Dropbox/bbs_manuscript/fig7_pharmacological_neuroimaging_analyses")
+setwd("../fig7_pharmacological_neuroimaging_analyses")
 
 # -- Get the demeaned delta GBC for BSNIP PSD subjects
 bsnip_gbcdm <- t(read.table("../fig6_feature_selection_analyses/BSNIP_PSD_N436_deltaGBC.txt"))
@@ -34,6 +34,7 @@ pc5beta_thresh_clean <- pc5beta_thresh[-which(pc5beta_thresh==0)]
 bsnip_gbcpc5featcor <- cor(bsnip_gbcdmbsnip_top31parcels_clean, pc5beta_thresh_clean, method="spearman")
 
 # -- Similarity index bar for Subject X_PC3
+pdf("SingleSubject_XPC3_IndexBar.pdf", height=10,width=3)
 X_PC3 <- data.frame("rank"="A", variable=factor(c("1","2","3")),"value"=c(-1-repl_gbcpc3featcor[42,1],repl_gbcpc3featcor[42,1], 1))
 ggplot(X_PC3, aes(x = rank, y = value, fill = variable)) + 
   geom_bar(stat = "identity") +
@@ -52,6 +53,7 @@ ggplot(X_PC3, aes(x = rank, y = value, fill = variable)) +
 dev.off()
 
 # -- Similarity index bar for Subject Y_PC3
+pdf("SingleSubject_YPC3_IndexBar.pdf", height=10,width=3)
 Y_PC3 <- data.frame("rank"="A", variable=factor(c("1","2","3")),"value"=c(-1, 1-repl_gbcpc3featcor[55,1],repl_gbcpc3featcor[55,1]))
 ggplot(Y_PC3, aes(x = rank, y = value, fill = variable)) + 
   geom_bar(stat = "identity") +
@@ -70,6 +72,7 @@ ggplot(Y_PC3, aes(x = rank, y = value, fill = variable)) +
 dev.off()
 
 # -- Similarity index bar for Subject Q_PC5
+pdf("SingleSubject_QPC5_IndexBar.pdf", height=10,width=3)
 Q_PC5 <- data.frame("rank"="A", variable=factor(c("1","2","3")),"value"=c(-1-bsnip_gbcpc5featcor[37,1],bsnip_gbcpc5featcor[37,1], 1))
 ggplot(Q_PC5, aes(x = rank, y = value, fill = variable)) + 
   geom_bar(stat = "identity") +
@@ -88,6 +91,7 @@ ggplot(Q_PC5, aes(x = rank, y = value, fill = variable)) +
 dev.off()
 
 # -- Similarity index bar for Subject Z_PC5
+pdf("SingleSubject_ZPC5_IndexBar.pdf", height=10,width=3)
 Z_PC5 <- data.frame("rank"="A", variable=factor(c("1","2","3")),"value"=c(-1,1-bsnip_gbcpc5featcor[119,1],bsnip_gbcpc5featcor[119,1]))
 ggplot(Z_PC5, aes(x = rank, y = value, fill = variable)) + 
   geom_bar(stat = "identity") +
