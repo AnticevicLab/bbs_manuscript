@@ -10,3 +10,6 @@ Description:
 * figX_*analyses - Code used to generate the components for each of the main text figures.
 
 * suppX_*analyses - Code used to generate the supplementary control analyses.
+
+Version History:
+0.1.0 - Public release.
