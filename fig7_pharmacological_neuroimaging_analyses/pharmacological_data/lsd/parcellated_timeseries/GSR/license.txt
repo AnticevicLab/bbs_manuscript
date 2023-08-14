@@ -1,0 +1,9 @@
+
+Copyright (c) 2023 Yale University & University of Zurich
+Authored by: Jie Lisa Ji, Markus Helmer, Clara Fonteneau, Joshua B. Burt, Zailyn Tamayo, Jure Demsar, Brendan D. Adkinson, Aleksandar Savic , Katrin H. Preller, Flora Moujaes, Franz X. Vollenweider, William J. Martin, Grega Repovs, Youngsun T. Cho, Christopher Pittenger, John D. Murray, Alan Anticevic
+
+Please cite: Ji JL, Helmer M, Fonteneau C, Burt JB, Tamayo Z, Demsar J, Adkinson BD, Savic A, Preller KH, Moujaes F, Vollenweider FX, Martin WJ, Repovs G, Cho YT, Pittenger C, Murray JD, Anticevic A (2021) Mapping Brain-Behavior Space Relationships Along the Psychosis Spectrum. eLife 2021;10:e66968
+
+This dataset is free for non-commercial use by academic, government, and non-profit/not-for-profit institutions.
+
+BY DOWNLOADING THIS DATASET YOU AGREE THAT THE DATASET PROVIDED HEREUNDER IS EXPERIMENTAL AND IS PROVIDED "AS IS", WITHOUT ANY WARRANTY OF ANY KIND, EXPRESSED OR IMPLIED, INCLUDING WITHOUT LIMITATION WARRANTIES OF MERCHANTABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE, OR NON-INFRINGEMENT OF ANY THIRD-PARTY PATENT, COPYRIGHT, OR ANY OTHER THIRD-PARTY RIGHT. IN NO EVENT SHALL THE CREATORS OF THE DATASET OR YALE UNIVERSITY OR UNIVERSITY OF ZURICH BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF OR IN ANY WAY CONNECTED WITH THE DATASET, THE USE OF THE DATASET, OR THIS AGREEMENT, WHETHER IN BREACH OF CONTRACT, TORT OR OTHERWISE, EVEN IF SUCH PARTY IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
